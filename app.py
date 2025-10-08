@@ -4,7 +4,8 @@ import paginas as p
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234"},
-    "maria": {"name": "Maria P.", "password": "abcd"}
+    "maria": {"name": "Maria P.", "password": "abcd"},
+    "leticya": {"name": "Leticya C.M.S", "password": "1021"}
 }
 
 # --- Inicializar session_state ---
