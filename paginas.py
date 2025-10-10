@@ -29,10 +29,11 @@ def archivos():
             df = pd.read_csv(archivo,encoding="latin1")
 
             df["Archivo"] = archivo.name
+			step_time = st.text_input("Intorducir el paso de tiempo en el que se miden los datos", "Escribir aquí en segundos")
 
             # --- 2️⃣ Cálculos adicionales ---
             if "DataPoint" in df.columns:
-                df["Time1(h)"] = df["DataPoint"] * 10 / 3600
+                df["Time1(h)"] = df["DataPoint"] * step_time / 3600
             if "Capacity(mAh)" in df.columns:
                 df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 4**2)
 
@@ -151,3 +152,4 @@ def archivos():
 
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
+
