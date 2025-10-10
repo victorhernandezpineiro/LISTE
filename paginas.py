@@ -19,7 +19,7 @@ def archivos():
     if archivos:
         dfs = []
         for archivo in archivos:
-            df = pd.read_csv(archivo)
+            df = pd.read_csv(archivo,encoding="latin1")
             df["Archivo"] = archivo.name
 
             # --- 2️⃣ Cálculos adicionales ---
@@ -143,3 +143,4 @@ def archivos():
 
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
+
