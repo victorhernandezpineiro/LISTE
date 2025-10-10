@@ -82,7 +82,7 @@ def archivos():
         datos_general = datos[datos["Archivo"].isin(archivos_general)]
 
         columnas = [col for col in datos.columns if col not in ["Archivo", "Paso"]]
-        x_col = st.selectbox("📊 Eje X:", columnas, index=0, default=["Total Time"])
+        x_col = st.selectbox("📊 Eje X:", columnas, index=0)
         y_cols = st.multiselect(
             "📉 Eje(s) Y:",
             [col for col in columnas if col != x_col],
@@ -150,5 +150,6 @@ def archivos():
 
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
+
 
 
