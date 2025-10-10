@@ -1,13 +1,20 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import numpy as np
+import plotly.express as px
+
 
 def home():
 	st.title("Home")
+	col1, col2 = st.columns(2)
+	with col1:
+		st.image("liste.png",width=200)
+	with col2:
+		st.write("La web LISTE UDC es una pagina para el tratamiento de datos del grupo LISTE del CICA")
+
 
 def archivos():
-    st.title("📂 Análisis de Archivos de Baterías")
+    st.title("📂 Análisis de Archivos CSV de Baterías")
 
     # --- 1️⃣ Subida múltiple ---
     archivos = st.file_uploader(
@@ -20,6 +27,7 @@ def archivos():
         dfs = []
         for archivo in archivos:
             df = pd.read_csv(archivo,encoding="latin1")
+
             df["Archivo"] = archivo.name
 
             # --- 2️⃣ Cálculos adicionales ---
@@ -29,23 +37,23 @@ def archivos():
                 df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 4**2)
 
             # --- 3️⃣ Identificar pasos de carga/descarga ---
-            if "Current(mA)" in df.columns:
+            if "Current(mA)" in df.columns or "Current(µA)" in df.columns:
+                current_col = "Current(mA)" if "Current(mA)" in df.columns else "Current(µA)"
                 df["Paso"] = ""
                 k_carga = 1
                 k_descarga = 1
                 for i in range(len(df)):
-                    current = df.loc[i, "Current(mA)"]
+                    current = df.loc[i, current_col]
                     if current == 0:
                         df.loc[i, "Paso"] = "Rest"
                     elif current > 0:
                         df.loc[i, "Paso"] = f"Carga {k_carga}"
-                        if i < len(df) - 1 and df.loc[i + 1, "Current(mA)"] <= 0:
+                        if i < len(df) - 1 and df.loc[i + 1, current_col] <= 0:
                             k_carga += 1
                     else:
                         df.loc[i, "Paso"] = f"Descarga {k_descarga}"
-                        if i < len(df) - 1 and df.loc[i + 1, "Current(mA)"] >= 0:
+                        if i < len(df) - 1 and df.loc[i + 1, current_col] >= 0:
                             k_descarga += 1
-
             dfs.append(df)
 
         # --- 4️⃣ Unir todos los DataFrames ---
@@ -143,4 +151,3 @@ def archivos():
 
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
-
