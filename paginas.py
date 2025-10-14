@@ -67,19 +67,21 @@ def archivos():
 		for i in range(len(datos)):
 			if "Current(mA)" in datos.columns:
 				current = datos.loc[i, "Current(mA)"]
+				columnname = "Current(mA)"
 			elif "Current(µA)" in datos.columns:
 				current = datos.loc[i, "Current(µA)"]
+				columnname = "Current(µA)"
 
 			if current == 0:
 				datos.loc[i, "Paso"] = "Rest"
 			elif current > 0:
 				datos.loc[i, "Paso"] = f"Charge {k_carga}"
 				# Si el siguiente valor cambia de signo o a cero, pasamos al siguiente ciclo
-				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] <= 0:
+				if i < len(datos) - 1 and datos.loc[i+1, columnname] <= 0:
 					k_carga += 1
 			elif current < 0:
 				datos.loc[i, "Paso"] = f"Discharge {k_descarga}"
-				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] >= 0:
+				if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 					k_descarga += 1
 		
 		
@@ -138,5 +140,6 @@ def archivos():
 				
 
 			
+
 
 
