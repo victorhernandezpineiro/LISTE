@@ -128,8 +128,8 @@ def archivos():
 
 		soh=[]
 		for i in range (1,len(df1)):
-			soh=tabla_ef.loc[i,"Discharge"]/tabla_ef.loc[0,"Discharge"]*100
-			soh.append([i,soh])
+			soh_i=tabla_ef.loc[i,"Discharge"]/tabla_ef.loc[0,"Discharge"]*100
+			soh.append([i,soh_i])
 		df2= pd.DataFrame(capacidad_max, columns=["Cycle", "SOH"])
 		st.dataframe(df2)
 
@@ -149,6 +149,7 @@ def archivos():
 				
 
 			
+
 
 
 
