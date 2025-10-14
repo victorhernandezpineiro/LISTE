@@ -121,8 +121,8 @@ def archivos():
 		).reset_index()
 
 		# Calcular la eficiencia coulombica
-		for i in range(0,len(tabla_ef)-1):
-			eficiencia=tabla_ef.loc[i+1, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
+		for i in range(0,len(tabla_ef)):
+			eficiencia=tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
 			tabla_ef.loc[i,"Eficiencia (%)"] = eficiencia
 		
 		st.subheader("⚙️ Eficiencia coulombica")
@@ -131,17 +131,13 @@ def archivos():
 		
 		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
 		soh = []
-		for i in range(len(tabla_ef)):
-			if i ==0:
-				soh_i="Descarga inicial"
-				soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
-			else:
-			    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[1, "Discharge"] * 100
-			    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
+		#for i in range(len(tabla_ef)):
+		#	    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[0, "Discharge"] * 100
+		#	    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
 		
-		df_soh = pd.DataFrame(soh, columns=["Cycle", "SOH (%)"])
-		st.subheader("🔋 Estado de salud (SOH)")
-		st.dataframe(df_soh, use_container_width=True)
+		#df_soh = pd.DataFrame(soh, columns=["Cycle", "SOH (%)"])
+		#st.subheader("🔋 Estado de salud (SOH)")
+		#st.dataframe(df_soh, use_container_width=True)
 
 			
 
@@ -159,6 +155,7 @@ def archivos():
 				
 
 			
+
 
 
 
