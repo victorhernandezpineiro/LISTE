@@ -65,7 +65,10 @@ def archivos():
 		
 
 		for i in range(len(datos)):
-			current = datos.loc[i, "Current(µA)"]
+			if "Current(mA)" in datos.columns:
+				current = datos.loc[i, "Current(mA)"]
+			elif "Current(µA)" in datos.columns:
+				current = datos.loc[i, "Current(µA)"]
 
 			if current == 0:
 				datos.loc[i, "Paso"] = "Rest"
@@ -135,4 +138,5 @@ def archivos():
 				
 
 			
+
 
