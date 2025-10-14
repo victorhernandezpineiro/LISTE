@@ -114,24 +114,27 @@ def archivos():
 
 		# Pivotar la tabla para tener columnas separadas
 		tabla_ef = df1.pivot_table(
-			index="Nº ciclo",
-			columns="Tipo",
-			values="Capacidad máxima (microAh/cm2)",
-			aggfunc="first"
+		    index="Nº ciclo",
+		    columns="Tipo",
+		    values="Capacidad máxima (microAh/cm2)",
+		    aggfunc="first"
 		).reset_index()
-
-		# Calcular la eficiencia
+		
+		# Calcular la eficiencia coulombica
 		tabla_ef["Eficiencia (%)"] = (tabla_ef["Discharge"] / tabla_ef["Charge"]) * 100
-
+		
 		st.subheader("⚙️ Eficiencia coulombica")
 		st.dataframe(tabla_ef, use_container_width=True)
-
-		soh=[]
-		for i in range (1,len(df1)):
-			soh_i=tabla_ef.loc[i,"Discharge"]/tabla_ef.loc[0,"Discharge"]*100
-			soh.append([i,soh_i])
-		df2= pd.DataFrame(capacidad_max, columns=["Cycle", "SOH"])
-		st.dataframe(df2)
+		
+		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
+		soh = []
+		for i in range(len(tabla_ef)):
+		    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[0, "Discharge"] * 100
+		    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
+		
+		df_soh = pd.DataFrame(soh, columns=["Cycle", "SOH (%)"])
+		st.subheader("🔋 Estado de salud (SOH)")
+		st.dataframe(df_soh, use_container_width=True)
 
 			
 
@@ -149,6 +152,7 @@ def archivos():
 				
 
 			
+
 
 
 
