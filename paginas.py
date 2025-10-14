@@ -121,7 +121,7 @@ def archivos():
 		).reset_index()
 
 		# Calcular la eficiencia
-		tabla_ef["Eficiencia (%)"] = (tabla_ef["Discharge"] / tabla_ef["Charge"]) * 100
+		tabla_ef["Eficiencia (%)"] = (tabla_ef["Charge"] / tabla_ef["Discharge"]) * 100
 
 		st.subheader("⚙️ Eficiencia de descarga/carga por ciclo")
 		st.dataframe(tabla_ef, use_container_width=True)
@@ -140,6 +140,7 @@ def archivos():
 				
 
 			
+
 
 
 
