@@ -70,12 +70,12 @@ def archivos():
 			if current == 0:
 				datos.loc[i, "Paso"] = "Rest"
 			elif current > 0:
-				datos.loc[i, "Paso"] = f"Carga {k_carga}"
+				datos.loc[i, "Paso"] = f"Charge {k_carga}"
 				# Si el siguiente valor cambia de signo o a cero, pasamos al siguiente ciclo
 				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] <= 0:
 					k_carga += 1
 			elif current < 0:
-				datos.loc[i, "Paso"] = f"Descarga {k_descarga}"
+				datos.loc[i, "Paso"] = f"Discharge {k_descarga}"
 				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] >= 0:
 					k_descarga += 1
 		
@@ -104,7 +104,7 @@ def archivos():
 
 		# --- 2️⃣ Calcular eficiencia (Descarga/Carga * 100) ---
 		# Extraer el tipo de paso (Carga o Descarga) y número de ciclo
-		df1["Tipo"] = df1["Ciclo"].str.extract(r'(Carga|Descarga)', expand=False)
+		df1["Tipo"] = df1["Ciclo"].str.extract(r'(Charge|Discharge)', expand=False)
 		df1["Nº ciclo"] = df1["Ciclo"].str.extract(r'(\d+)', expand=False).astype(float)
 
 		# Pivotar la tabla para tener columnas separadas
@@ -116,7 +116,7 @@ def archivos():
 		).reset_index()
 
 		# Calcular la eficiencia
-		tabla_ef["Eficiencia (%)"] = (tabla_ef["Descarga"] / tabla_ef["Carga"]) * 100
+		tabla_ef["Eficiencia (%)"] = (tabla_ef["Discharge"] / tabla_ef["Charge"]) * 100
 
 		st.subheader("⚙️ Eficiencia de descarga/carga por ciclo")
 		st.dataframe(tabla_ef, use_container_width=True)
@@ -135,3 +135,4 @@ def archivos():
 				
 
 			
+
