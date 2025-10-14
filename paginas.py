@@ -125,7 +125,7 @@ def archivos():
 			eficiencia=tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
 			tabla_ef.loc[i,"Eficiencia (%)"] = eficiencia
 		
-		st.subheader("⚙️ Eficiencia coulombica")
+		st.subheader("⚙️ Eficiencia")
 		columnas_mostrar=["Nº ciclo", "Eficiencia (%)"]
 		st.dataframe(tabla_ef, use_container_width=True)
 		
@@ -155,6 +155,7 @@ def archivos():
 				
 
 			
+
 
 
 
