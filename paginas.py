@@ -121,10 +121,19 @@ def archivos():
 		).reset_index()
 
 		# Calcular la eficiencia
-		tabla_ef["Eficiencia (%)"] = (tabla_ef["Charge"] / tabla_ef["Discharge"]) * 100
+		tabla_ef["Eficiencia (%)"] = (tabla_ef["Discharge"] / tabla_ef["Charge"]) * 100
 
-		st.subheader("⚙️ Eficiencia de descarga/carga por ciclo")
+		st.subheader("⚙️ Eficiencia coulombica")
 		st.dataframe(tabla_ef, use_container_width=True)
+
+		soh=[]
+		for i in range (1,len(df1)):
+			soh=df1.loc[i,"Discharge"]/df1.loc[0,"Discharge"]*100
+			soh.append([i,soh])
+		df2= pd.DataFrame(capacidad_max, columns=["Cycle", "SOH"])
+		st.dataframe(df2)
+
+			
 
 		# # --- 3️⃣ (Opcional) Representar gráficamente ---
 		# import plotly.express as px
@@ -140,6 +149,7 @@ def archivos():
 				
 
 			
+
 
 
 
