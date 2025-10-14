@@ -127,7 +127,7 @@ def archivos():
 		
 		st.subheader("⚙️ Eficiencia coulombica")
 		columnas_mostrar=["Nº ciclo", "Eficiencia (%)"]
-		st.dataframe(tabla_ef[columnas_mostrar], use_container_width=True)
+		st.dataframe(tabla_ef, use_container_width=True)
 		
 		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
 		soh = []
@@ -155,6 +155,7 @@ def archivos():
 				
 
 			
+
 
 
 
