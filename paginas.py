@@ -121,7 +121,9 @@ def archivos():
 		).reset_index()
 		
 		# Calcular la eficiencia coulombica
-		tabla_ef["Eficiencia (%)"] = (tabla_ef["Discharge"] / tabla_ef["Charge"]) * 100
+		for i in range(0,len(tabla_ef)-1):
+			eficiencia=tabla_ef.loc[i+1, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
+			tabla_ef.loc[i,"Eficiencia (%)"] = eficiencia
 		
 		st.subheader("⚙️ Eficiencia coulombica")
 		st.dataframe(tabla_ef, use_container_width=True)
@@ -152,6 +154,7 @@ def archivos():
 				
 
 			
+
 
 
 
