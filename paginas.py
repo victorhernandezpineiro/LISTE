@@ -1,155 +1,137 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
-
+import numpy as np
 
 def home():
 	st.title("Home")
-	col1, col2 = st.columns(2)
-	with col1:
-		st.image("liste.png",width=200)
-	with col2:
-		st.write("La web LISTE UDC es una pagina para el tratamiento de datos del grupo LISTE del CICA")
-
 
 def archivos():
-    st.title("📂 Análisis de Archivos CSV de Baterías")
-
-    # --- 1️⃣ Subida múltiple ---
-    archivos = st.file_uploader(
-        "Sube uno o varios archivos CSV:",
-        type=["csv"],
-        accept_multiple_files=True
-    )
-
-    if archivos:
-        dfs = []
-        for archivo in archivos:
-            df = pd.read_csv(archivo,encoding="latin1")
-
-            df["Archivo"] = archivo.name
-
-            # --- 2️⃣ Cálculos adicionales ---
-
-            if "Capacity(mAh)" in df.columns:
-                df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 4**2)
-
-            # --- 3️⃣ Identificar pasos de carga/descarga ---
-            if "Current(mA)" in df.columns or "Current(µA)" in df.columns:
-                current_col = "Current(mA)" if "Current(mA)" in df.columns else "Current(µA)"
-                df["Paso"] = ""
-                k_carga = 1
-                k_descarga = 1
-                for i in range(len(df)):
-                    current = df.loc[i, current_col]
-                    if current == 0:
-                        df.loc[i, "Paso"] = "Rest"
-                    elif current > 0:
-                        df.loc[i, "Paso"] = f"Carga {k_carga}"
-                        if i < len(df) - 1 and df.loc[i + 1, current_col] <= 0:
-                            k_carga += 1
-                    else:
-                        df.loc[i, "Paso"] = f"Descarga {k_descarga}"
-                        if i < len(df) - 1 and df.loc[i + 1, current_col] >= 0:
-                            k_descarga += 1
-            dfs.append(df)
-
-        # --- 4️⃣ Unir todos los DataFrames ---
-        datos = pd.concat(dfs, ignore_index=True)
-        archivos_disponibles = datos["Archivo"].unique().tolist()
-        st.success(f"✅ {len(archivos)} archivos cargados correctamente.")
-
-        # --- 5️⃣ Mostrar tabla completa con filtro ---
-        st.subheader("📋 Datos de los archivos cargados")
-        archivos_tabla = st.multiselect(
-            "Selecciona qué archivos mostrar en la tabla:",
-            archivos_disponibles,
-            default=archivos_disponibles,
-            key="tabla"
-        )
-        datos_tabla = datos[datos["Archivo"].isin(archivos_tabla)]
-        st.dataframe(datos_tabla, height=300, use_container_width=True)
-
-        # --- 6️⃣ Gráfica general (X vs Y) ---
-        st.subheader("📈 Gráfica general (comparativa libre)")
-        archivos_general = st.multiselect(
-            "Selecciona los archivos para esta gráfica:",
-            archivos_disponibles,
-            default=archivos_disponibles,
-            key="general"
-        )
-        datos_general = datos[datos["Archivo"].isin(archivos_general)]
-
-        columnas = [col for col in datos.columns if col not in ["Archivo", "Paso"]]
-        x_col = st.selectbox("📊 Eje X:", columnas, index=0)
-        y_cols = st.multiselect(
-            "📉 Eje(s) Y:",
-            [col for col in columnas if col != x_col],
-            default=["Voltage(V)"]
-        )
-
-        if y_cols:
-            fig = px.line(
-                datos_general,
-                x=x_col,
-                y=y_cols,
-                color="Archivo",
-                title=f"Comparativa de {', '.join(y_cols)} vs {x_col}"
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-        # --- 7️⃣ Voltaje vs Capacidad ---
-        st.subheader("⚡ Voltaje vs Capacidad (por paso)")
-        archivos_capacidad = st.multiselect(
-            "Selecciona los archivos para esta gráfica:",
-            archivos_disponibles,
-            default=archivos_disponibles,
-            key="voltaje"
-        )
-        datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)]
-
-        fig1 = px.line(
-            datos_capacidad,
-            x="Capacity1(mAh/cm2)",
-            y="Voltage(V)",
-            color="Paso",
-            facet_col="Archivo",
-            title="Voltaje vs Capacidad diferenciando ciclos y archivos"
-        )
-        st.plotly_chart(fig1, use_container_width=True)
-
-        # --- 8️⃣ Capacidad máxima por ciclo ---
-        st.subheader("🔋 Capacidad máxima por ciclo")
-        capacidad_max = (
-            datos.groupby(["Archivo", "Paso"])["Capacity(mAh)"]
-            .max()
-            .reset_index()
-            .rename(columns={"Capacity(mAh)": "Capacidad máxima (mAh)"})
-        )
-
-        archivos_ciclos = st.multiselect(
-            "Selecciona los archivos para la gráfica de capacidad máxima:",
-            archivos_disponibles,
-            default=archivos_disponibles,
-            key="ciclos"
-        )
-        capacidad_filtrada = capacidad_max[capacidad_max["Archivo"].isin(archivos_ciclos)]
-
-        fig2 = px.bar(
-            capacidad_filtrada,
-            x="Paso",
-            y="Capacidad máxima (mAh)",
-            color="Archivo",
-            barmode="group",
-            title="Capacidad máxima por ciclo (Carga / Descarga)"
-        )
-        st.plotly_chart(fig2, use_container_width=True)
-
-        st.dataframe(capacidad_filtrada, use_container_width=True)
-
-    else:
-        st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
+	st.title("Archivos")
+	uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
+	# corriente_carga = st.number_input("Introduce la corriente de carga:")
+	# corriente_descarga = st.number_input("Introduce la corriente de descarga:")
+	if uploaded_file is not None:	
+		datos=pd.read_csv(uploaded_file,encoding="latin1")
+		st.write("### 📋 Datos")
+		datos["Time1(h)"]=datos["DataPoint"]*10/3600
+		for i in range(len(datos)):
+			if datos.loc[i, "Step Type"] == "CV Chg":
+				datos.loc[i, "Capacity1(microAh/cm2)"] = datos.loc[i, "Capacity(mAh)"]*1000 / (np.pi * 4**2) + datos.loc[i - 1, "Capacity1(microAh/cm2)"]
+			else:
+				datos.loc[i, "Capacity1(microAh/cm2)"] = datos.loc[i, "Capacity(mAh)"]*1000 / (np.pi * 4**2)
 
 
+		if "Current(mA)" in datos.columns or "Current(µA)" in datos.columns:
+			current_col = "Current(mA)" if "Current(mA)" in datos.columns else "Current(µA)"
+			datos["Paso"] = ""
+			k_carga = 1
+			k_descarga = 1
+			for i in range(len(datos)):
+				current = datos.loc[i, current_col]
+				if current == 0:
+					datos.loc[i, "Paso"] = "Rest"
+				elif current > 0:
+					datos.loc[i, "Paso"] = f"Charge {k_carga}"
+					if i < len(datos) - 1 and datos.loc[i + 1, current_col] <= 0:
+						k_carga += 1
+				else:
+					datos.loc[i, "Paso"] = f"Discharge {k_descarga}"
+					if i < len(datos) - 1 and datos.loc[i + 1, current_col] >= 0:
+						k_descarga += 1
 
+		st.dataframe(datos)
+
+
+		columnas = datos.columns.tolist()
+
+		x_col = st.selectbox("📈 Elige el eje X:", columnas, index=0)
+		y_cols = st.multiselect(
+			"📉 Elige una o varias variables para el eje Y:",
+			options=[col for col in columnas if col != x_col],
+			default=["Voltage(V)"]
+		)
+		# plt.plot(datos["DataPoint"],datos["Voltage(V)"])
+		fig=px.line( datos, x_col,y=y_cols)
+		# fig=px.line(datos, x="Capacity(Ah)",y="Voltage(V)")
+		fig.layout.title="Voltaje vs DataPoint"
+		st.plotly_chart(fig, use_container_width=True)
+
+		datos["Paso"]=""
+		print (datos.keys())
+		k_carga = 1
+		k_descarga = 1
+
+		
+
+		for i in range(len(datos)):
+			current = datos.loc[i, "Current(µA)"]
+
+			if current == 0:
+				datos.loc[i, "Paso"] = "Rest"
+			elif current > 0:
+				datos.loc[i, "Paso"] = f"Carga {k_carga}"
+				# Si el siguiente valor cambia de signo o a cero, pasamos al siguiente ciclo
+				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] <= 0:
+					k_carga += 1
+			elif current < 0:
+				datos.loc[i, "Paso"] = f"Descarga {k_descarga}"
+				if i < len(datos) - 1 and datos.loc[i+1, "Current(µA)"] >= 0:
+					k_descarga += 1
+		
+		
+		fig1=px.line( datos, "Capacity1(microAh/cm2)", "Voltage(V)",color="Paso")
+		st.plotly_chart(fig1, use_container_width=True)
+
+
+		capacidad_max = []
+
+		for i in range(1, len(datos)):  # empieza en 1 para poder usar i-1
+			if datos.loc[i, "Paso"] != datos.loc[i - 1, "Paso"]:
+				capacidad_max.append([
+					datos.loc[i-1, "DataPoint"],
+					datos.loc[i - 1, "Paso"],
+					datos.loc[i - 1, "Capacity1(microAh/cm2)"]
+				])
+			elif i == len(datos) - 1:  # último punto
+				capacidad_max.append([
+					datos.loc[i, "DataPoint"],
+					datos.loc[i, "Paso"],
+					datos.loc[i, "Capacity1(microAh/cm2)"]
+				])
+		df1= pd.DataFrame(capacidad_max, columns=["DataPoint", "Ciclo", "Capacidad máxima (microAh/cm2)"])
+		st.dataframe(df1)
+
+		# --- 2️⃣ Calcular eficiencia (Descarga/Carga * 100) ---
+		# Extraer el tipo de paso (Carga o Descarga) y número de ciclo
+		df1["Tipo"] = df1["Ciclo"].str.extract(r'(Carga|Descarga)', expand=False)
+		df1["Nº ciclo"] = df1["Ciclo"].str.extract(r'(\d+)', expand=False).astype(float)
+
+		# Pivotar la tabla para tener columnas separadas
+		tabla_ef = df1.pivot_table(
+			index="Nº ciclo",
+			columns="Tipo",
+			values="Capacidad máxima (microAh/cm2)",
+			aggfunc="first"
+		).reset_index()
+
+		# Calcular la eficiencia
+		tabla_ef["Eficiencia (%)"] = (tabla_ef["Descarga"] / tabla_ef["Carga"]) * 100
+
+		st.subheader("⚙️ Eficiencia de descarga/carga por ciclo")
+		st.dataframe(tabla_ef, use_container_width=True)
+
+		# # --- 3️⃣ (Opcional) Representar gráficamente ---
+		# import plotly.express as px
+
+		# fig = px.bar(
+		# 	tabla_ef,
+		# 	x="Nº ciclo",
+		# 	y="Eficiencia (%)",
+		# 	title="Eficiencia de descarga/carga por ciclo",
+		# )
+		# st.plotly_chart(fig, use_container_width=True)
+
+				
+
+			
