@@ -132,8 +132,12 @@ def archivos():
 		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
 		soh = []
 		for i in range(len(tabla_ef)):
-		    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[0, "Discharge"] * 100
-		    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
+			if i ==0:
+				soh_i="Descarga inicial"
+				soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
+			else:
+			    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[1, "Discharge"] * 100
+			    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
 		
 		df_soh = pd.DataFrame(soh, columns=["Cycle", "SOH (%)"])
 		st.subheader("🔋 Estado de salud (SOH)")
@@ -155,6 +159,7 @@ def archivos():
 				
 
 			
+
 
 
 
