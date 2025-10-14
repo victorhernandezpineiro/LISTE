@@ -119,14 +119,15 @@ def archivos():
 		    values="Capacidad máxima (microAh/cm2)",
 		    aggfunc="first"
 		).reset_index()
-		
+
 		# Calcular la eficiencia coulombica
 		for i in range(0,len(tabla_ef)-1):
 			eficiencia=tabla_ef.loc[i+1, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
 			tabla_ef.loc[i,"Eficiencia (%)"] = eficiencia
 		
 		st.subheader("⚙️ Eficiencia coulombica")
-		st.dataframe(tabla_ef, use_container_width=True)
+		columnas_mostrar=["Nº ciclo", "Eficiencia (%)"]
+		st.dataframe(tabla_ef[columnas_mostrar], use_container_width=True)
 		
 		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
 		soh = []
@@ -154,6 +155,7 @@ def archivos():
 				
 
 			
+
 
 
 
