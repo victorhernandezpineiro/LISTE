@@ -17,9 +17,9 @@ def archivos():
 		datos["Time1(h)"]=datos["DataPoint"]*10/3600
 		for i in range(len(datos)):
 			if datos.loc[i, "Step Type"] == "CV Chg":
-				datos.loc[i, "Capacity1(microAh/cm2)"] = datos.loc[i, "Capacity(mAh)"]*1000 / (np.pi * 4**2) + datos.loc[i - 1, "Capacity1(microAh/cm2)"]
+				datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2) + datos.loc[i - 1, "Capacity1(mAh/cm2)"]
 			else:
-				datos.loc[i, "Capacity1(microAh/cm2)"] = datos.loc[i, "Capacity(mAh)"]*1000 / (np.pi * 4**2)
+				datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2)
 
 
 		if "Current(mA)" in datos.columns or "Current(µA)" in datos.columns:
@@ -85,7 +85,7 @@ def archivos():
 					k_descarga += 1
 		
 		
-		fig1=px.line( datos, "Capacity1(microAh/cm2)", "Voltage(V)",color="Paso")
+		fig1=px.line( datos, "Capacity1(mAh/cm2)", "Voltage(V)",color="Paso")
 		st.plotly_chart(fig1, use_container_width=True)
 
 
@@ -96,15 +96,15 @@ def archivos():
 				capacidad_max.append([
 					datos.loc[i-1, "DataPoint"],
 					datos.loc[i - 1, "Paso"],
-					datos.loc[i - 1, "Capacity1(microAh/cm2)"]
+					datos.loc[i - 1, "Capacity1(mAh/cm2)"]
 				])
 			elif i == len(datos) - 1:  # último punto
 				capacidad_max.append([
 					datos.loc[i, "DataPoint"],
 					datos.loc[i, "Paso"],
-					datos.loc[i, "Capacity1(microAh/cm2)"]
+					datos.loc[i, "Capacity1(mAh/cm2)"]
 				])
-		df1= pd.DataFrame(capacidad_max, columns=["DataPoint", "Ciclo", "Capacidad máxima (microAh/cm2)"])
+		df1= pd.DataFrame(capacidad_max, columns=["DataPoint", "Ciclo", "Capacidad máxima (mAh/cm2)"])
 		st.dataframe(df1)
 
 		# --- 2️⃣ Calcular eficiencia (Descarga/Carga * 100) ---
@@ -114,32 +114,17 @@ def archivos():
 
 		# Pivotar la tabla para tener columnas separadas
 		tabla_ef = df1.pivot_table(
-		    index="Nº ciclo",
-		    columns="Tipo",
-		    values="Capacidad máxima (microAh/cm2)",
-		    aggfunc="first"
+			index="Nº ciclo",
+			columns="Tipo",
+			values="Capacidad máxima (mAh/cm2)",
+			aggfunc="first"
 		).reset_index()
 
-		# Calcular la eficiencia coulombica
-		for i in range(0,len(tabla_ef)):
-			eficiencia=tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[i, "Charge"] * 100
-			tabla_ef.loc[i,"Eficiencia (%)"] = eficiencia
-		
-		st.subheader("⚙️ Eficiencia")
-		columnas_mostrar=["Nº ciclo", "Eficiencia (%)"]
-		st.dataframe(tabla_ef, use_container_width=True)
-		
-		# Calcular SOH (State of Health) respecto al primer ciclo de descarga
-		soh = []
-		#for i in range(len(tabla_ef)):
-		#	    soh_i = tabla_ef.loc[i, "Discharge"] / tabla_ef.loc[0, "Discharge"] * 100
-		#	    soh.append([tabla_ef.loc[i, "Nº ciclo"], soh_i])
-		
-		#df_soh = pd.DataFrame(soh, columns=["Cycle", "SOH (%)"])
-		#st.subheader("🔋 Estado de salud (SOH)")
-		#st.dataframe(df_soh, use_container_width=True)
+		# Calcular la eficiencia
+		tabla_ef["Eficiencia (%)"] = (tabla_ef["Charge"] / tabla_ef["Discharge"]) * 100
 
-			
+		st.subheader("⚙️ Eficiencia de descarga/carga por ciclo")
+		st.dataframe(tabla_ef, use_container_width=True)
 
 		# # --- 3️⃣ (Opcional) Representar gráficamente ---
 		# import plotly.express as px
@@ -155,17 +140,5 @@ def archivos():
 				
 
 			
-
-
-
-
-
-
-
-
-
-
-
-
 
 
