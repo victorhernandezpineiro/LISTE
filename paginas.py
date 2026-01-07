@@ -24,20 +24,35 @@ def archivos():
 
 		if "Current(mA)" in datos.columns or "Current(µA)" in datos.columns:
 			current_col = "Current(mA)" if "Current(mA)" in datos.columns else "Current(µA)"
-			datos["Paso"] = ""
+			datos["Paso"]=""
+			datos["Ciclo"]=""
+			print (datos.keys())
 			k_carga = 1
 			k_descarga = 1
+	
+			
+	
 			for i in range(len(datos)):
-				current = datos.loc[i, current_col]
+				if "Current(mA)" in datos.columns:
+					current = datos.loc[i, "Current(mA)"]
+					columnname = "Current(mA)"
+				elif "Current(µA)" in datos.columns:
+					current = datos.loc[i, "Current(µA)"]
+					columnname = "Current(µA)"
+	
 				if current == 0:
 					datos.loc[i, "Paso"] = "Rest"
+					datos.loc[i, "Ciclo"] = "Rest"
 				elif current > 0:
 					datos.loc[i, "Paso"] = f"Charge {k_carga}"
-					if i < len(datos) - 1 and datos.loc[i + 1, current_col] <= 0:
+					datos.loc[i, "Ciclo"] = {k_carga}
+					# Si el siguiente valor cambia de signo o a cero, pasamos al siguiente ciclo
+					if i < len(datos) - 1 and datos.loc[i+1, columnname] <= 0:
 						k_carga += 1
-				else:
+				elif current < 0:
 					datos.loc[i, "Paso"] = f"Discharge {k_descarga}"
-					if i < len(datos) - 1 and datos.loc[i + 1, current_col] >= 0:
+					datos.loc[i, "Ciclo"] = {k_descarga}
+					if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 						k_descarga += 1
 
 		st.dataframe(datos)
@@ -144,6 +159,7 @@ def archivos():
 				
 
 			
+
 
 
 
