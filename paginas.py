@@ -101,8 +101,7 @@ def archivos():
 				datos.loc[i, "Ciclo"] = {k_descarga}
 				if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 					k_descarga += 1
-		'''
-		
+'''
 		fig1=px.line( datos, "Capacity1(mAh/cm2)", "Voltage(V)",color="Ciclo")
 		st.plotly_chart(fig1, use_container_width=True)
 '''
@@ -159,6 +158,7 @@ def archivos():
 
 			
 '''
+
 
 
 
