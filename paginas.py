@@ -78,7 +78,7 @@ def archivos():
 		k_carga = 1
 		k_descarga = 1
 
-		
+		st.tittle("Me actualizo")
 
 		for i in range(len(datos)):
 			if "Current(mA)" in datos.columns:
@@ -160,6 +160,7 @@ def archivos():
 
 			
 '''
+
 
 
 
