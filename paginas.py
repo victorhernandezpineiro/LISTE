@@ -42,7 +42,7 @@ def archivos():
 	
 				if current == 0:
 					datos.loc[i, "Paso"] = "Rest"
-					datos.loc[i, "Ciclo"] = 0
+					#datos.loc[i, "Ciclo"] = 0
 				elif current > 0:
 					datos.loc[i, "Paso"] = f"Charge {k_carga}"
 					datos.loc[i, "Ciclo"] = k_carga
@@ -90,7 +90,7 @@ def archivos():
 
 			if current == 0:
 				datos.loc[i, "Paso"] = "Rest"
-				datos.loc[i, "Ciclo"] = 0
+				#datos.loc[i, "Ciclo"] = 0
 			elif current > 0:
 				datos.loc[i, "Paso"] = f"Charge {k_carga}"
 				datos.loc[i, "Ciclo"] = {k_carga}
@@ -160,6 +160,7 @@ def archivos():
 
 			
 '''
+
 
 
 
