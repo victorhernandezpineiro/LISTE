@@ -57,7 +57,6 @@ def archivos():
 
 		st.dataframe(datos)
 
-		st.tittle("HOLAAA")
 		columnas = datos.columns.tolist()
 
 		x_col = st.selectbox("📈 Elige el eje X:", columnas, index=0)
@@ -78,7 +77,7 @@ def archivos():
 		k_carga = 1
 		k_descarga = 1
 
-		st.tittle("Me actualizo")
+		st.title("Me actualizo")
 
 		for i in range(len(datos)):
 			if "Current(mA)" in datos.columns:
@@ -160,6 +159,7 @@ def archivos():
 
 			
 '''
+
 
 
 
