@@ -70,7 +70,7 @@ def archivos():
 		# fig=px.line(datos, x="Capacity(Ah)",y="Voltage(V)")
 		fig.layout.title="Voltaje vs DataPoint"
 		st.plotly_chart(fig, use_container_width=True)
-
+'''
 		datos["Paso"]=""
 		datos["Ciclo"]=0
 		print (datos.keys())
@@ -101,7 +101,7 @@ def archivos():
 				datos.loc[i, "Ciclo"] = {k_descarga}
 				if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 					k_descarga += 1
-		
+		'''
 		
 		fig1=px.line( datos, "Capacity1(mAh/cm2)", "Voltage(V)",color="Ciclo")
 		st.plotly_chart(fig1, use_container_width=True)
@@ -159,6 +159,7 @@ def archivos():
 
 			
 '''
+
 
 
 
