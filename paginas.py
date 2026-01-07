@@ -106,7 +106,7 @@ def archivos():
 		
 		fig1=px.line( datos, "Capacity1(mAh/cm2)", "Voltage(V)",color="Ciclo")
 		st.plotly_chart(fig1, use_container_width=True)
-
+'''
 
 		capacidad_max = []
 
@@ -159,6 +159,7 @@ def archivos():
 				
 
 			
+'''
 
 
 
