@@ -25,7 +25,7 @@ def archivos():
 		if "Current(mA)" in datos.columns or "Current(µA)" in datos.columns:
 			current_col = "Current(mA)" if "Current(mA)" in datos.columns else "Current(µA)"
 			datos["Paso"]=""
-			datos["Ciclo"]=""
+			datos["Ciclo"]=np.zeros()
 			print (datos.keys())
 			k_carga = 1
 			k_descarga = 1
@@ -160,6 +160,7 @@ def archivos():
 
 			
 '''
+
 
 
 
