@@ -73,7 +73,7 @@ def archivos():
 		st.plotly_chart(fig, use_container_width=True)
 
 		datos["Paso"]=""
-		datos["Ciclo"]=""
+		datos["Ciclo"]=np.zeros()
 		print (datos.keys())
 		k_carga = 1
 		k_descarga = 1
@@ -160,6 +160,7 @@ def archivos():
 
 			
 '''
+
 
 
 
