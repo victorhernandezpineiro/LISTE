@@ -57,7 +57,7 @@ def archivos():
 
 		st.dataframe(datos)
 
-
+		st.tittle("HOLAAA")
 		columnas = datos.columns.tolist()
 
 		x_col = st.selectbox("📈 Elige el eje X:", columnas, index=0)
@@ -160,6 +160,7 @@ def archivos():
 
 			
 '''
+
 
 
 
