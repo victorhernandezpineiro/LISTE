@@ -21,6 +21,9 @@ def archivos():
 			else:
 				datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2)
 
+			if datos.loc[i,"Capacity1(mAh/cm2)"]==0:
+				atos.loc[i,"Capacity1(mAh/cm2)"]= None
+
 
 		if "Current(mA)" in datos.columns or "Current(µA)" in datos.columns:
 			current_col = "Current(mA)" if "Current(mA)" in datos.columns else "Current(µA)"
@@ -124,6 +127,7 @@ def archivos():
 		# st.plotly_chart(fig, use_container_width=True)
 
 				
+
 
 
 
