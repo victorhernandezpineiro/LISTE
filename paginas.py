@@ -58,7 +58,7 @@ def archivos():
 						if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 							k_descarga += 1
 				else:
-					if current == 0 and datos.loc[i-1,"Paso"]!=f"Discharge {k_descarga}:
+					if current == 0 and datos.loc[i-1,"Paso"]!=f"Discharge {k_descarga}":
 						datos.loc[i, "Paso"] = "Rest"
 						#datos.loc[i, "Ciclo"] = 0
 					elif current >= 0 and datos.loc[i-1,"Paso"]==f"Discharge {k_descarga}":
