@@ -58,7 +58,7 @@ def archivos():
 					if i < len(datos) - 1 and datos.loc[i+1, columnname] >= 0:
 						k_descarga += 1
 				elif current == 0:
-					datos.loc[i, "Paso"] = datos.loc[i-1, "Paso"] 
+					datos.loc[i, "Paso"] = datos.loc[i+1, "Paso"] 
 
 
 		st.dataframe(datos)
@@ -130,6 +130,7 @@ def archivos():
 		# st.plotly_chart(fig, use_container_width=True)
 
 				
+
 
 
 
