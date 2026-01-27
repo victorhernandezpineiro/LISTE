@@ -43,7 +43,7 @@ def archivos():
 					current = datos.loc[i, "Current(µA)"]
 					columnname = "Current(µA)"
 	
-				if current == 0 and datos.loc[i-1,"Paso"]!=f"Discharge {k_descarga}":
+				if current == 0:
 					datos.loc[i, "Paso"] = "Rest"
 					#datos.loc[i, "Ciclo"] = 0
 				elif current >= 0 and datos.loc[i-1,"Paso"]!=f"Discharge {k_descarga}":
@@ -127,6 +127,7 @@ def archivos():
 		# st.plotly_chart(fig, use_container_width=True)
 
 				
+
 
 
 
