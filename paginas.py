@@ -17,7 +17,7 @@ def archivos():
 		#datos["Time1(h)"]=datos["DataPoint"]*10/3600
 		for i in range(len(datos)):
 			if datos.loc[i, "Step Type"] == "CV Chg": # or datos.loc[i, "Step Type"] == "CCCV Chg":
-				datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2) + datos.loc[i - 1, "Capacity1(mAh/cm2)"]
+				#datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2) + datos.loc[i - 1, "Capacity1(mAh/cm2)"]
 			else:
 				datos.loc[i, "Capacity1(mAh/cm2)"] = datos.loc[i, "Capacity(mAh)"] / (np.pi * 0.4**2)
 
@@ -129,6 +129,7 @@ def archivos():
 		# st.plotly_chart(fig, use_container_width=True)
 
 				
+
 
 
 
