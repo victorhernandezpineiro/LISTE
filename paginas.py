@@ -46,7 +46,7 @@ def archivos():
 				if datos.loc[i,"Step Type"] == "Rest":
 					datos.loc[i, "Paso"] = "Rest"
 					#datos.loc[i, "Ciclo"] = 0
-				elif current >= 0 and (datos.loc[i,"Step Type"] == "CC Chg" or datos.loc[i,"Step Type"] == "CCV Chg"):
+				elif current >= 0 and (datos.loc[i,"Step Type"] == "CC Chg" or datos.loc[i,"Step Type"] == "CCCV Chg"):
 					datos.loc[i, "Paso"] = f"Charge {k_carga}"
 					datos.loc[i, "Ciclo"] = k_carga
 					# Si el siguiente valor cambia de signo o a cero, pasamos al siguiente ciclo
@@ -129,6 +129,7 @@ def archivos():
 		# st.plotly_chart(fig, use_container_width=True)
 
 				
+
 
 
 
