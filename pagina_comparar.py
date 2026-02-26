@@ -10,7 +10,9 @@ def comparar():
 	# corriente_carga = st.number_input("Introduce la corriente de carga:")
 	# corriente_descarga = st.number_input("Introduce la corriente de descarga:")
 	if uploaded_file is not None:	
+		st.write("Here")
 		datos=pd.read_csv(uploaded_file,encoding="latin1")
+		st.write("Here")
 		st.write("### 📋 Datos")
 		st.write(uploaded_file)
         
