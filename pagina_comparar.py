@@ -53,17 +53,7 @@ def comparar():
         archivos_disponibles = datos["Archivo"].unique().tolist()
         st.success(f"✅ {len(archivos)} archivos cargados correctamente.")
 
-        # --- 5️⃣ Mostrar tabla completa con filtro ---
-        st.subheader("📋 Datos de los archivos cargados")
-        archivos_tabla = st.multiselect(
-            "Selecciona qué archivos mostrar en la tabla:",
-            archivos_disponibles,
-            default=archivos_disponibles,
-            key="tabla"
-        )
-        datos_tabla = datos[datos["Archivo"].isin(archivos_tabla)]
-        st.dataframe(datos_tabla, height=300, use_container_width=True)
-
+       
         # --- 6️⃣ Gráfica general (X vs Y) ---
         st.subheader("📈 Gráfica general (comparativa libre)")
         archivos_general = st.multiselect(
