@@ -7,6 +7,8 @@ def comparar():
 	st.title("Archivos")
 	uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv', accept_multiple_files=True)
 	st.write("Here")
+	st.write(uploaded_file)
+
 	# corriente_carga = st.number_input("Introduce la corriente de carga:")
 	# corriente_descarga = st.number_input("Introduce la corriente de descarga:")
 	if uploaded_file is not None:	
