@@ -83,7 +83,7 @@ def comparar():
             st.plotly_chart(fig, use_container_width=True)
 
         # --- 7️⃣ Voltaje vs Capacidad ---
-        st.subheader("⚡ Voltaje vs Capacidad (comparación ciclo a ciclo)")
+        st.subheader("⚡ Voltaje vs Capacidad (ciclo por archivo)")
         
         archivos_capacidad = st.multiselect(
             "Selecciona los archivos para esta gráfica:",
@@ -94,24 +94,28 @@ def comparar():
         
         datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
         
-        # Crear identificador único combinando Archivo + Paso
-        datos_capacidad["Ciclo_archivo"] = (
-            datos_capacidad["Archivo"].astype(str) + 
-            " - " + 
-            datos_capacidad["Paso"].astype(str)
+        # Extraer número de ciclo desde la columna Paso
+        datos_capacidad["Ciclo"] = datos_capacidad["Paso"].str.extract(r'(\d+)')
+        
+        # Crear identificador único de ciclo por archivo
+        datos_capacidad["Archivo_Ciclo"] = (
+            datos_capacidad["Archivo"].astype(str) +
+            "_Ciclo_" +
+            datos_capacidad["Ciclo"].astype(str)
         )
         
         fig1 = px.line(
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Paso",        # mismo color para Carga 1 en todos los archivos
-            line_dash="Archivo", # archivo se diferencia por tipo de línea
-            title="Voltaje vs Capacidad - Comparación ciclo a ciclo"
-        )        
+            color="Archivo",                 # 🔵 cada archivo un color distinto
+            line_group="Archivo_Ciclo",      # 🔁 separa ciclos dentro de cada archivo
+            line_dash="Paso",                # 🔄 distingue carga/descarga
+            title="Voltaje vs Capacidad - Comparación por ciclo"
+        )
         
         fig1.update_layout(
-            legend_title="Archivo - Paso",
+            legend_title="Archivo",
         )
         
         st.plotly_chart(fig1, use_container_width=True)
