@@ -94,13 +94,13 @@ def comparar():
         
         datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
         
-        # Extraer número de ciclo desde la columna Paso
+        # Extraer número de ciclo desde "Paso"
         datos_capacidad["Ciclo"] = datos_capacidad["Paso"].str.extract(r'(\d+)')
         
-        # Crear identificador único de ciclo por archivo
+        # Crear identificador único Archivo + Ciclo
         datos_capacidad["Archivo_Ciclo"] = (
             datos_capacidad["Archivo"].astype(str) +
-            "_Ciclo_" +
+            " - Ciclo " +
             datos_capacidad["Ciclo"].astype(str)
         )
         
@@ -108,14 +108,13 @@ def comparar():
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Archivo",                 # 🔵 cada archivo un color distinto
-            line_group="Archivo_Ciclo",      # 🔁 separa ciclos dentro de cada archivo
-            line_dash="Paso",                # 🔄 distingue carga/descarga
+            color="Archivo_Ciclo",   # 🔵 un color por ciclo dentro de cada archivo
+            line_group="Archivo_Ciclo",  # evita que ciclos distintos se conecten
             title="Voltaje vs Capacidad - Comparación por ciclo"
         )
         
         fig1.update_layout(
-            legend_title="Archivo",
+            legend_title="Archivo - Ciclo"
         )
         
         st.plotly_chart(fig1, use_container_width=True)
