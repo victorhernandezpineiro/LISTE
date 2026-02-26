@@ -60,7 +60,8 @@ if st.session_state["authenticated"]:
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
-        p_cp.archivos()
+        p_cp.comparar()
+
 
 
 
