@@ -1,6 +1,6 @@
 import streamlit as st
 import paginas as p
-import paginas_comparar as p_cp
+import pagina_comparar as p_cp
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234"},
@@ -57,5 +57,6 @@ if st.session_state["authenticated"]:
         st.write("Esta es la página de información")
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
+
 
 
