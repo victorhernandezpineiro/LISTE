@@ -105,9 +105,10 @@ def comparar():
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Ciclo_archivo",   # cada ciclo de cada archivo es una curva distinta
+            color="Paso",        # mismo color para Carga 1 en todos los archivos
+            line_dash="Archivo", # archivo se diferencia por tipo de línea
             title="Voltaje vs Capacidad - Comparación ciclo a ciclo"
-        )
+        )        
         
         fig1.update_layout(
             legend_title="Archivo - Paso",
