@@ -3,10 +3,7 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 
-def home():
-	st.title("Home")
-
-def archivos():
+def comparar():
 	st.title("Archivos")
 	uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv', accept_multiple_files=True)
 	# corriente_carga = st.number_input("Introduce la corriente de carga:")
