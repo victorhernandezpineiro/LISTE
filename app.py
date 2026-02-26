@@ -43,8 +43,10 @@ if st.session_state["authenticated"]:
             st.session_state["pagina"] = "inicio"
         if st.button("ℹ️ Información"):
             st.session_state["pagina"] = "informacion"
-        if st.button("📂 Archivos"):
+        if st.button("📂 Visualizar Archivos"):
             st.session_state["pagina"] = "archivos"
+         if st.button("📂 Comparar Archivos"):
+            st.session_state["pagina"] = "comparar"
         if st.button("🔓 Logout"):
             st.session_state["authenticated"] = False
             st.session_state["username"] = ""
@@ -57,6 +59,9 @@ if st.session_state["authenticated"]:
         st.write("Esta es la página de información")
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
+    elif st.session_state["pagina"] == "comparar":
+        p_cp.archivos()
+
 
 
 
