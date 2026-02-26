@@ -83,6 +83,40 @@ def comparar():
             st.plotly_chart(fig, use_container_width=True)
 
         # --- 7️⃣ Voltaje vs Capacidad ---
+        st.subheader("⚡ Voltaje vs Capacidad (comparación ciclo a ciclo)")
+        
+        archivos_capacidad = st.multiselect(
+            "Selecciona los archivos para esta gráfica:",
+            archivos_disponibles,
+            default=archivos_disponibles,
+            key="voltaje"
+        )
+        
+        datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
+        
+        # Crear identificador único de ciclo por archivo
+        datos_capacidad["Ciclo_archivo"] = (
+            datos_capacidad["Archivo"].astype(str) + 
+            " - Ciclo " + 
+            datos_capacidad["Ciclo"].astype(str)
+        )
+        
+        fig1 = px.line(
+            datos_capacidad,
+            x="Capacity1(mAh/cm2)",
+            y="Voltage(V)",
+            color="Ciclo_archivo",      # cada ciclo (de cada archivo) en color distinto
+            line_dash="Archivo",        # diferencia archivos visualmente
+            title="Voltaje vs Capacidad - Comparación ciclo a ciclo"
+        )
+        
+        fig1.update_layout(
+            legend_title="Archivo - Ciclo",
+        )
+        
+        st.plotly_chart(fig1, use_container_width=True)
+        '''
+        # --- 7️⃣ Voltaje vs Capacidad ---
         st.subheader("⚡ Voltaje vs Capacidad (por paso)")
         archivos_capacidad = st.multiselect(
             "Selecciona los archivos para esta gráfica:",
@@ -101,7 +135,7 @@ def comparar():
             title="Voltaje vs Capacidad diferenciando ciclos y archivos"
         )
         st.plotly_chart(fig1, use_container_width=True)
-
+        '''
 
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
