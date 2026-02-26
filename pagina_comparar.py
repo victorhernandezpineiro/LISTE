@@ -94,24 +94,23 @@ def comparar():
         
         datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
         
-        # Crear identificador único de ciclo por archivo
+        # Crear identificador único combinando Archivo + Paso
         datos_capacidad["Ciclo_archivo"] = (
             datos_capacidad["Archivo"].astype(str) + 
-            " - Ciclo " + 
-            datos_capacidad["Ciclo"].astype(str)
+            " - " + 
+            datos_capacidad["Paso"].astype(str)
         )
         
         fig1 = px.line(
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Ciclo_archivo",      # cada ciclo (de cada archivo) en color distinto
-            line_dash="Archivo",        # diferencia archivos visualmente
+            color="Ciclo_archivo",   # cada ciclo de cada archivo es una curva distinta
             title="Voltaje vs Capacidad - Comparación ciclo a ciclo"
         )
         
         fig1.update_layout(
-            legend_title="Archivo - Ciclo",
+            legend_title="Archivo - Paso",
         )
         
         st.plotly_chart(fig1, use_container_width=True)
