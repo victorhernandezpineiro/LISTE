@@ -4,7 +4,7 @@ import numpy as np
 import plotly.express as px
 
 def comparar():
-    st.title("📂 Análisis de Archivos CSV de Baterías")
+    st.title("📂 Comparar Capacidades")
 
     # --- 1️⃣ Subida múltiple ---
     archivos = st.file_uploader(
