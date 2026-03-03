@@ -122,7 +122,6 @@ def comparar():
 
         #----------------------------------
         st.subheader("⚡ Voltaje vs Capacidad (ciclo específico por archivo)")
-
         archivos_capacidad = st.multiselect(
             "Selecciona los archivos para esta gráfica:",
             archivos_disponibles,
