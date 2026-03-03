@@ -126,7 +126,7 @@ def comparar():
             "Selecciona los archivos para esta gráfica:",
             archivos_disponibles,
             default=archivos_disponibles,
-            key="voltaje"
+            key="voltaje_ciclo"
         )
         
         datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
