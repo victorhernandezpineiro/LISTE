@@ -123,9 +123,6 @@ def comparar():
         #----------------------------------
         st.subheader("⚡ Voltaje vs Capacidad (ciclo seleccionable)")
 
-        import plotly.express as px
-        import streamlit as st
-        
         # Selector de paso (X)
         paso_seleccionado = st.selectbox(
             "Selecciona el paso a representar:",
