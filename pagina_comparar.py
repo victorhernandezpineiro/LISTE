@@ -7,7 +7,7 @@ def comparar():
     st.title("📂 Comparar Capacidades")
 
     # --- 1️⃣ Subida múltiple ---
-    archivos = st.file_uploader(
+    archivos = st.file_uploader(e
         "Sube uno o varios archivos CSV:",
         type=["csv"],
         accept_multiple_files=True
@@ -113,7 +113,7 @@ def comparar():
             line_group="Paso",         # evita que carga y descarga se conecten
             title="Voltaje vs Capacidad - Comparación por ciclo"
         )
-        
+        fig1.update_traces(line=dict(width=4))
         fig1.update_layout(
             legend_title="Archivo - Ciclo",
         )
