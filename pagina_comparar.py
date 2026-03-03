@@ -121,43 +121,53 @@ def comparar():
         st.plotly_chart(fig1, use_container_width=True)
 
         #----------------------------------
-        st.subheader("⚡ Voltaje vs Capacidad (ciclo seleccionable)")
+        st.subheader("⚡ Voltaje vs Capacidad (ciclo específico por archivo)")
 
-        # Selector de paso (X)
-        paso_seleccionado = st.selectbox(
-            "Selecciona el paso a representar:",
-            sorted(datos_capacidad["Paso"].unique())
+        archivos_capacidad = st.multiselect(
+            "Selecciona los archivos para esta gráfica:",
+            archivos_disponibles,
+            default=archivos_disponibles,
+            key="voltaje"
         )
         
-        # Filtrar solo el paso elegido
+        datos_capacidad = datos[datos["Archivo"].isin(archivos_capacidad)].copy()
+        
+        # Extraer número de ciclo
+        datos_capacidad["Ciclo"] = datos_capacidad["Paso"].str.extract(r'(\d+)')
+        
+        # Selector de ciclo
+        ciclo_seleccionado = st.selectbox(
+            "Selecciona el ciclo:",
+            sorted(datos_capacidad["Ciclo"].dropna().unique())
+        )
+        
+        # Filtrar solo el ciclo elegido
         datos_filtrados = datos_capacidad[
-            datos_capacidad["Paso"] == paso_seleccionado
-        ]
+            datos_capacidad["Ciclo"] == ciclo_seleccionado
+        ].copy()
         
-        # Definir colores fijos por archivo
-        mapa_colores = {
-            "A": "blue",
-            "B": "red",
-            "C": "green"
-        }
+        # Crear grupo único para evitar que carga y descarga se conecten
+        datos_filtrados["Grupo"] = (
+            datos_filtrados["Archivo"].astype(str) + "_" +
+            datos_filtrados["Paso"].astype(str)
+        )
         
-        fig = px.line(
+        fig1 = px.line(
             datos_filtrados,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Archivo",          # color solo por archivo
-            line_group="Archivo",     # evita conexiones raras
-            color_discrete_map=mapa_colores,
-            title=f"Voltaje vs Capacidad - Paso {paso_seleccionado}"
+            color="Archivo",          # 🔥 color fijo por archivo
+            line_group="Grupo",       # separa carga y descarga
+            title=f"Voltaje vs Capacidad - Ciclo {ciclo_seleccionado}"
         )
         
-        fig.update_traces(line=dict(width=4))
+        fig1.update_traces(line=dict(width=6))
         
-        fig.update_layout(
-            legend_title="Archivo"
+        fig1.update_layout(
+            legend_title="Archivo",
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig1, use_container_width=True)
         '''
         # --- 7️⃣ Voltaje vs Capacidad ---
         st.subheader("⚡ Voltaje vs Capacidad (por paso)")
