@@ -7,7 +7,7 @@ def comparar():
     st.title("📂 Comparar Capacidades")
 
     # --- 1️⃣ Subida múltiple ---
-    archivos = st.file_uploader(e
+    archivos = st.file_uploader(
         "Sube uno o varios archivos CSV:",
         type=["csv"],
         accept_multiple_files=True
