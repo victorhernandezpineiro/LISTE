@@ -24,7 +24,7 @@ def comparar():
             if "DataPoint" in df.columns:
                 df["Time1(h)"] = df["DataPoint"] * 10 / 3600
             if "Capacity(mAh)" in df.columns:
-                df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 4**2)
+                df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 0.4**2)
                 
 
             # --- 3️⃣ Identificar pasos de carga/descarga ---
