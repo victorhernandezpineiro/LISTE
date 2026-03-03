@@ -119,6 +119,46 @@ def comparar():
         )
         
         st.plotly_chart(fig1, use_container_width=True)
+
+        #----------------------------------
+        import plotly.express as px
+        import streamlit as st
+        
+        # Selector de paso (X)
+        paso_seleccionado = st.selectbox(
+            "Selecciona el paso a representar:",
+            sorted(datos_capacidad["Paso"].unique())
+        )
+        
+        # Filtrar solo el paso elegido
+        datos_filtrados = datos_capacidad[
+            datos_capacidad["Paso"] == paso_seleccionado
+        ]
+        
+        # Definir colores fijos por archivo
+        mapa_colores = {
+            "A": "blue",
+            "B": "red",
+            "C": "green"
+        }
+        
+        fig = px.line(
+            datos_filtrados,
+            x="Capacity1(mAh/cm2)",
+            y="Voltage(V)",
+            color="Archivo",          # color solo por archivo
+            line_group="Archivo",     # evita conexiones raras
+            color_discrete_map=mapa_colores,
+            title=f"Voltaje vs Capacidad - Paso {paso_seleccionado}"
+        )
+        
+        fig.update_traces(line=dict(width=4))
+        
+        fig.update_layout(
+            legend_title="Archivo"
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
         '''
         # --- 7️⃣ Voltaje vs Capacidad ---
         st.subheader("⚡ Voltaje vs Capacidad (por paso)")
@@ -140,7 +180,7 @@ def comparar():
         )
         st.plotly_chart(fig1, use_container_width=True)
         '''
-
+    
     else:
         st.info("⬆️ Sube uno o varios archivos CSV para comenzar.")
 
