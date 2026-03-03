@@ -121,6 +121,8 @@ def comparar():
         st.plotly_chart(fig1, use_container_width=True)
 
         #----------------------------------
+        st.subheader("⚡ Voltaje vs Capacidad (ciclo seleccionable)")
+
         import plotly.express as px
         import streamlit as st
         
