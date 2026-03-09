@@ -36,24 +36,24 @@ def home(USERS):
         c1, c2, c3 = st.columns(3)
         
         with c1:
-            st.info("### 📥 Carga de Datos")
-            st.write("""
-            Importa archivos brutos de tus cicladores Neware. 
-            La herramienta detectará las columnas del archivo y calculará la capacidad específica y otros parámetros automáticamente.
-            """)
+            st.info("### 📥 Cargar")
+            #st.write("""
+            #Importa archivos brutos de tus cicladores Neware. 
+            #La herramienta detectará las columnas del archivo y calculará la capacidad específica y otros parámetros automáticamente.
+            #""")
             
         with c2:
-            st.success("### 📊 Análisis")
-            st.write("""
-            Cálculo de capacidades, eficiencias culómbicas y **diferencial de capacidad (dQ/dV)**. 
-            Generación de gráficas interactivas.
-            """)
+            st.success("### 📊 Analizar")
+            #st.write("""
+            #Cálculo de capacidades, eficiencias culómbicas y **diferencial de capacidad (dQ/dV)**. 
+            #Generación de gráficas interactivas.
+            #""")
             
         with c3:
-            st.warning("### 📥 Exportación")
-            st.write("""
-            Descarga los datos procesados en formato Excel o CSV listos para tus informes o publicaciones.
-            """)
+            st.warning("### 📥 Exportar")
+            #st.write("""
+            #Descarga los datos procesados en formato Excel o CSV listos para tus informes o publicaciones.
+            #""")
 
         st.divider()
 
