@@ -45,39 +45,37 @@ def home():
 	st.title("Home")
 
 def archivos():
-    st.title("Archivos")
-    uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
+	st.title("Archivos")
+	uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
+	
+	# Todo lo relacionado con el archivo debe estar dentro de este 'if'
+	# y dentro de la función 'archivos'
+	if uploaded_file is not None:
+		@st.cache_data  # Corregido: era cache_data, no cache_dataa
+		# --- Ejecución y UI (Identado dentro del 'if uploaded_file') ---
+		datos = get_data(uploaded_file)
+		
+		col1, col2 = st.columns(2)
+		with col1:
+			x_col = st.selectbox("📈 Eje X:", datos.columns.tolist(), index=0)
+		with col2:
+			opciones_y = [c for c in datos.columns if c != x_col]
+			y_default = ["Voltage(V)"] if "Voltage(V)" in opciones_y else []
+			y_cols = st.multiselect("📉 Eje Y:", opciones_y, default=y_default)
+	
+		# Gráfica 1
+		if y_cols:
+			fig = px.line(datos, x=x_col, y=y_cols, title="Gráfica General")
+			st.plotly_chart(fig, use_container_width=True)
+	
+		# Gráfica 2 (Capacidad específica)
+		# Nota: Cambié el nombre a "Capacity1..." para que coincida con tu cálculo de arriba
+		if "Capacity1(mAh/cm2)" in datos.columns:
+			fig1 = px.line(datos, x="Capacity1(mAh/cm2)", y="Voltage(V)", 
+						   color="Tipo Paso", title="Capacidad Específica por Paso")
+			fig1.update_traces(line=dict(width=3))
+			st.plotly_chart(fig1, use_container_width=True)
 
-    # Todo lo relacionado con el archivo debe estar dentro de este 'if'
-    # y dentro de la función 'archivos'
-    if uploaded_file is not None:
-        
-        @st.cache_data  # Corregido: era cache_data, no cache_dataa
-        
-
-        # --- Ejecución y UI (Identado dentro del 'if uploaded_file') ---
-        datos = get_data(uploaded_file)
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            x_col = st.selectbox("📈 Eje X:", datos.columns.tolist(), index=0)
-        with col2:
-            opciones_y = [c for c in datos.columns if c != x_col]
-            y_default = ["Voltage(V)"] if "Voltage(V)" in opciones_y else []
-            y_cols = st.multiselect("📉 Eje Y:", opciones_y, default=y_default)
-
-        # Gráfica 1
-        if y_cols:
-            fig = px.line(datos, x=x_col, y=y_cols, title="Gráfica General")
-            st.plotly_chart(fig, use_container_width=True)
-
-        # Gráfica 2 (Capacidad específica)
-        # Nota: Cambié el nombre a "Capacity1..." para que coincida con tu cálculo de arriba
-        if "Capacity1(mAh/cm2)" in datos.columns:
-            fig1 = px.line(datos, x="Capacity1(mAh/cm2)", y="Voltage(V)", 
-                           color="Tipo Paso", title="Capacidad Específica por Paso")
-            fig1.update_traces(line=dict(width=3))
-            st.plotly_chart(fig1, use_container_width=True)
 
 
 
