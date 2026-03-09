@@ -7,6 +7,59 @@ def home():
 	st.title("Home")
 
 def archivos():
+    st.title("Archivos")
+    uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
+
+    if uploaded_file is not None:
+        @st.cache_data
+        def get_data(file):
+            df = pd.read_csv(file, encoding="latin1")
+            
+            # Cálculo de capacidad vectorial
+            if "Capacity(mAh)" in df.columns:
+                df["Specific Capacity(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 0.4**2)
+
+            # Identificación de Pasos Vectorial
+            if any(col in df.columns for col in ["Current(mA)", "Current(µA)"]):
+                c_col = "Current(mA)" if "Current(mA)" in df.columns else "Current(µA)"
+                
+                signo = np.sign(df[c_col])
+                # Detectar cambios de ciclo
+                cambio_ciclo = (signo != signo.shift()).fillna(False).cumsum()
+                df["Paso"] = cambio_ciclo
+
+                # --- CORRECCIÓN AQUÍ ---
+                # Añadimos un valor por defecto que sea STRING ("Sin definir") 
+                # para que coincida con los tipos de la choicelist.
+                df["Tipo Paso"] = np.select(
+                    [df[c_col] == 0, df[c_col] > 0, df[c_col] < 0],
+                    ["Rest", "Carga", "Descarga"],
+                    default="Sin definir" 
+                )
+            return df
+
+        datos = get_data(uploaded_file)
+        
+        # --- UI y Gráficos ---
+        col1, col2 = st.columns(2)
+        with col1:
+            x_col = st.selectbox("📈 Eje X:", datos.columns.tolist(), index=0) # Ajustado index para evitar error si hay pocas columnas
+        with col2:
+            opciones_y = [c for c in datos.columns if c != x_col]
+            y_cols = st.multiselect("📉 Eje Y:", opciones_y, default=["Voltage(V)"] if "Voltage(V)" in opciones_y else [])
+
+        # Gráfica 1
+        fig = px.line(datos, x=x_col, y=y_cols, title="Gráfica General")
+        st.plotly_chart(fig, use_container_width=True)
+
+        # Gráfica 2 (Capacidad específica)
+        if "Specific Capacity(mAh/cm2)" in datos.columns:
+            fig1 = px.line(datos, x="Specific Capacity(mAh/cm2)", y="Voltage(V)", 
+                           color="Paso", title="Capacidad Específica por Paso")
+            fig1.update_traces(line=dict(width=3))
+            st.plotly_chart(fig1, use_container_width=True)
+'''
+def archivos():
 	st.title("Archivos")
 	uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
 	# corriente_carga = st.number_input("Introduce la corriente de carga:")
@@ -128,8 +181,8 @@ def archivos():
 		# 	title="Eficiencia de descarga/carga por ciclo",
 		# )
 		# st.plotly_chart(fig, use_container_width=True)
+'''				
 
-				
 
 
 
