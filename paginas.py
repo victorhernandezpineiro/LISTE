@@ -66,9 +66,8 @@ if uploaded_file is not None:
             df.drop(columns=["_base", "_carga_idx", "_descarga_idx"], inplace=True)
 
         return df
-
-    # Ejecución
-    datos = get_data(uploaded_file)
+  		# Ejecución
+   		datos = get_data(uploaded_file)
         
         # --- UI y Gráficos ---
         col1, col2 = st.columns(2)
@@ -212,6 +211,7 @@ def archivos():
 		# )
 		# st.plotly_chart(fig, use_container_width=True)
 '''				
+
 
 
 
