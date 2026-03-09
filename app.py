@@ -59,13 +59,14 @@ if st.session_state["authenticated"]:
 
     # --- Mostrar contenido según página ---
     if st.session_state["pagina"] == "inicio":
-        p_home.home()
+        p_home.home(USERS)
     elif st.session_state["pagina"] == "informacion":
         st.write("Esta es la página de información")
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
