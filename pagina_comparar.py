@@ -174,7 +174,7 @@ def comparar():
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
             color="Archivo",          # 🔥 color fijo por archivo
-            line_group="Grupo",       # separa carga y descarga
+            line_group="Tipo Paso",       # separa carga y descarga
             title=f"Voltaje vs Capacidad - Ciclo {ciclo_seleccionado}"
         )
         
