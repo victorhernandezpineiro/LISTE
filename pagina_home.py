@@ -11,7 +11,7 @@ def home(USERS):
         
         with col_logo:
             # Sustituye 'logo_grupo.png' por la ruta de tu imagen o una URL
-            st.image(r"C:\Users\victo\Desktop\LISTE\liste.png", width=120)
+            st.image("liste.png", width=120)
         
         with col_info:
             # Fecha y Hora actual
