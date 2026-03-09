@@ -17,6 +17,7 @@ if "pagina" not in st.session_state:
     st.session_state["pagina"] = "login"  # página inicial antes del login
 
 # --- Login ---
+'''
 if not st.session_state["authenticated"]:
     st.title("🔒 Login")
     username = st.text_input("Usuario")
@@ -33,7 +34,35 @@ if not st.session_state["authenticated"]:
             
         else:
             st.error("Usuario o contraseña incorrectos")
+'''
+# --- Login ---
+if not st.session_state.get("authenticated", False):
+    st.title("🔒 Login")
+    username = st.text_input("Usuario")
+    password = st.text_input("Contraseña", type="password")
+    login_button = st.button("Entrar")
 
+    if login_button:
+        if username in USERS and USERS[username]["password"] == password:
+            # 1. Actualizamos el estado
+            st.session_state["authenticated"] = True
+            st.session_state["username"] = username
+            st.session_state["pagina"] = "inicio"
+            
+            # 2. Forzamos la recarga inmediata para mostrar la Home
+            st.rerun() 
+        else:
+            st.error("Usuario o contraseña incorrectos")
+
+# --- Lógica de navegación (Home) ---
+else:
+    if st.session_state.get("pagina") == "inicio":
+        st.title(f"Bienvenido, {USERS[st.session_state['username']]['name']}!")
+        st.write("Bienvenido a la web interna de LISTE para tratamiento de datos de cicladores")
+        
+        if st.button("Cerrar Sesión"):
+            st.session_state["authenticated"] = False
+            st.rerun()
 # --- Contenido de la app después del login ---
 if st.session_state["authenticated"]:
     with st.sidebar:
@@ -61,6 +90,7 @@ if st.session_state["authenticated"]:
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
