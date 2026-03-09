@@ -1,6 +1,7 @@
 import streamlit as st
 import paginas as p
 import pagina_comparar as p_cp
+import pagina_home as p_home
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234"},
@@ -52,18 +53,20 @@ if st.session_state["authenticated"]:
             st.session_state["pagina"] = "comparar"
         if st.button("🔓 Logout"):
             st.session_state["authenticated"] = False
+            st.rerun()
             st.session_state["username"] = ""
             st.session_state["pagina"] = "login"
 
     # --- Mostrar contenido según página ---
     if st.session_state["pagina"] == "inicio":
-        p.home()
+        p_home.home()
     elif st.session_state["pagina"] == "informacion":
         st.write("Esta es la página de información")
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
