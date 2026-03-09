@@ -85,7 +85,7 @@ def comparar():
         datos_general = datos[datos["Archivo"].isin(archivos_general)]
 
         columnas = [col for col in datos.columns if col not in ["Archivo", "Tipo Paso"]]
-        x_col = st.selectbox("📊 Eje X:", columnas, index=0)
+        x_col = st.selectbox("📊 Eje X:", columnas, index=3)
         y_cols = st.multiselect(
             "📉 Eje(s) Y:",
             [col for col in columnas if col != x_col],
