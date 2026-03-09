@@ -27,7 +27,7 @@ if not st.session_state["authenticated"]:
         if username in USERS and USERS[username]["password"] == password:
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
-            st.success(st.session_state["pagina"] = "inicio")  # redirige a la página de inicio#f"Bienvenido, {USERS[username]['name']}!")
+            st.success==(st.session_state["pagina"] = "inicio")  # redirige a la página de inicio#f"Bienvenido, {USERS[username]['name']}!")
             
             st.write("Bienvenido a la web interna de LISTE para tratamiento de datos de cicladores")
             
@@ -61,6 +61,7 @@ if st.session_state["authenticated"]:
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
