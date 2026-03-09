@@ -10,35 +10,65 @@ def archivos():
     st.title("Archivos")
     uploaded_file = st.file_uploader("Elige un archivo CSV", type='csv')
 
-    if uploaded_file is not None:
-        @st.cache_data
-        def get_data(file):
-            df = pd.read_csv(file, encoding="latin1")
+    import pandas as pd
+import numpy as np
+import streamlit as st
+
+if uploaded_file is not None:
+    @st.cache_data
+    def get_data(file):
+        # 1. Lectura del archivo
+        df = pd.read_csv(file, encoding="latin1")
+        
+        # 2. Cálculo de capacidad específica
+        if "Capacity(mAh)" in df.columns:
+            # Usamos el nombre de columna del segundo código: Capacity1(mAh/cm2)
+            df["Capacity1(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 0.4**2)
+
+        # 3. Identificación de Pasos (Lógica secuencial)
+        col_mA = "Current(mA)" if "Current(mA)" in df.columns else ("Current(µA)" if "Current(µA)" in df.columns else None)
+        
+        if col_mA:
+            # Detectar cambios de signo para identificar nuevas etapas
+            signo = np.sign(df[col_mA])
+            cambio = (signo != signo.shift()).fillna(False)
             
-            # Cálculo de capacidad vectorial
-            if "Capacity(mAh)" in df.columns:
-                df["Specific Capacity(mAh/cm2)"] = df["Capacity(mAh)"] / (np.pi * 0.4**2)
+            # Definir estados base
+            condiciones_base = [df[col_mA] == 0, df[col_mA] > 0, df[col_mA] < 0]
+            nombres_base = ["Rest", "Carga", "Descarga"]
+            df["_base"] = np.select(condiciones_base, nombres_base, default="Rest")
 
-            # Identificación de Pasos Vectorial
-            if any(col in df.columns for col in ["Current(mA)", "Current(µA)"]):
-                c_col = "Current(mA)" if "Current(mA)" in df.columns else "Current(µA)"
-                
-                signo = np.sign(df[c_col])
-                # Detectar cambios de ciclo
-                cambio_ciclo = (signo != signo.shift()).fillna(False).cumsum()
-                df["Paso"] = cambio_ciclo
+            # Contadores acumulativos por tipo (Carga 1, Carga 2...)
+            df["_carga_idx"] = ((df["_base"] == "Carga") & cambio).cumsum()
+            df["_descarga_idx"] = ((df["_base"] == "Descarga") & cambio).cumsum()
+            
+            # --- GENERACIÓN DE ETIQUETAS FINALES ---
+            
+            # Tipo Paso: Columna de texto (String) para leyendas o filtros
+            df["Tipo Paso"] = np.select(
+                [df["_base"] == "Rest", df["_base"] == "Carga", df["_base"] == "Descarga"],
+                [
+                    "Rest", 
+                    "Carga " + df["_carga_idx"].astype(str), 
+                    "Descarga " + df["_descarga_idx"].astype(str)
+                ],
+                default="Rest"
+            )
+            
+            # Paso: Columna numérica (Integer) para cálculos o ejes X
+            df["Paso"] = np.select(
+                [df["_base"] == "Carga", df["_base"] == "Descarga"],
+                [df["_carga_idx"], df["_descarga_idx"]],
+                default=0
+            )
+            
+            # Limpiar columnas auxiliares
+            df.drop(columns=["_base", "_carga_idx", "_descarga_idx"], inplace=True)
 
-                # --- CORRECCIÓN AQUÍ ---
-                # Añadimos un valor por defecto que sea STRING ("Sin definir") 
-                # para que coincida con los tipos de la choicelist.
-                df["Tipo Paso"] = np.select(
-                    [df[c_col] == 0, df[c_col] > 0, df[c_col] < 0],
-                    ["Rest", "Carga", "Descarga"],
-                    default="Sin definir" 
-                )
-            return df
+        return df
 
-        datos = get_data(uploaded_file)
+    # Ejecución
+    datos = get_data(uploaded_file)
         
         # --- UI y Gráficos ---
         col1, col2 = st.columns(2)
@@ -182,6 +212,7 @@ def archivos():
 		# )
 		# st.plotly_chart(fig, use_container_width=True)
 '''				
+
 
 
 
