@@ -45,8 +45,8 @@ if st.session_state["authenticated"]:
         
         if st.button("🏠 Inicio"):
             st.session_state["pagina"] = "inicio"
-        if st.button("ℹ️ Información"):
-            st.session_state["pagina"] = "informacion"
+        #if st.button("ℹ️ Información"):
+           # st.session_state["pagina"] = "informacion"
         if st.button("📂 Visualizar Archivos"):
             st.session_state["pagina"] = "archivos"
         if st.button("📂 Comparar Archivos"):
@@ -60,12 +60,13 @@ if st.session_state["authenticated"]:
     # --- Mostrar contenido según página ---
     if st.session_state["pagina"] == "inicio":
         p_home.home(USERS)
-    elif st.session_state["pagina"] == "informacion":
-        st.write("Esta es la página de información")
+    #elif st.session_state["pagina"] == "informacion":
+        #st.write("Esta es la página de información")
     elif st.session_state["pagina"] == "archivos":
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
