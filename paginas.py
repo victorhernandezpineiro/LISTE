@@ -56,7 +56,7 @@ def archivos():
 		datos = get_data(uploaded_file)
 		col1, col2 = st.columns(2)
 		with col1:
-			x_col = st.selectbox("📈 Eje X:", datos.columns.tolist(), index=0)
+			x_col = st.selectbox("📈 Eje X:", datos.columns.tolist(), index=3)
 		with col2:
 			opciones_y = [c for c in datos.columns if c != x_col]
 			y_default = ["Voltage(V)"] if "Voltage(V)" in opciones_y else []
@@ -74,6 +74,7 @@ def archivos():
 						   color="Paso",line_group="Tipo Paso", title="Capacidad Específica por Paso")
 			fig1.update_traces(line=dict(width=3))
 			st.plotly_chart(fig1, use_container_width=True)
+
 
 
 
