@@ -4,8 +4,8 @@ import pagina_comparar as p_cp
 import pagina_home as p_home
 # Diccionario de usuarios
 USERS = {
-    "victor": {"name": "Victor H.P.", "password": "1234", "role": "Investigador"},
-    "maria": {"name": "Maria P.", "password": "abcd", "role": "estudiante TFG"},
+    "victor": {"name": "Victor H.P.", "password": "1234", "role": "Estudiante de doctorado"},
+    #"maria": {"name": "Maria P.", "password": "abcd", "role": "estudiante TFG"},
     "leticya": {"name": "Leticya C.M.S", "password": "1021", "role": "Investigador"}
 }
 
@@ -66,6 +66,7 @@ if st.session_state["authenticated"]:
         p.archivos()
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
+
 
 
 
