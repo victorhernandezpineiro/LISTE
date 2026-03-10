@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 def home(USERS):
-    st.title("Home")
+    st.title(f"Bienvenido al Portal LISTE, {user_name}")
     # --- Dentro del bloque de navegación (donde ya estás autenticado) ---
     if st.session_state.get("pagina") == "inicio":
         
@@ -27,7 +27,7 @@ def home(USERS):
         st.divider()
 
         # 2. Título de Bienvenida
-        st.title(f"Bienvenido al Portal LISTE, {user_name}")
+        #st.title(f"Bienvenido al Portal LISTE, {user_name}")
         st.write("Esta plataforma está diseñada para centralizar el post-procesado de ensayos de caracterización electroquímica.")
 
         # 3. Descripción de las Secciones (Cards visuales)
