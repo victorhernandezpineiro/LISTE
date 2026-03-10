@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 def home(USERS):
+    user_name = USERS[st.session_state["username"]]["name"]
     st.title(f"Bienvenido al Portal LISTE, {user_name}")
     # --- Dentro del bloque de navegación (donde ya estás autenticado) ---
     if st.session_state.get("pagina") == "inicio":
