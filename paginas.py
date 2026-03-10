@@ -75,6 +75,45 @@ def archivos():
 			fig1.update_traces(line=dict(width=3))
 			st.plotly_chart(fig1, use_container_width=True)
 
+		#GRafica3
+		if "Capacity1(mAh/cm2)" in datos.columns:
+		    # 1. Obtener los pasos únicos disponibles en los datos
+		    pasos_disponibles = sorted(datos["Paso"].unique())
+		
+		    # 2. Crear el selector multiopción en la interfaz
+		    pasos_seleccionados = st.multiselect(
+		        "Selecciona los pasos que deseas representar:",
+		        options=pasos_disponibles,
+		        default=pasos_disponibles # Por defecto muestra todos
+		    )
+		
+		    # 3. Filtrar los datos según la elección del usuario
+		    datos_filtrados = datos[datos["Paso"].isin(pasos_seleccionados)].copy()
+		
+		    # Convertimos 'Paso' a string para asegurar colores discretos (un color único por paso)
+		    datos_filtrados["Paso"] = datos_filtrados["Paso"].astype(str)
+		
+		    if not datos_filtrados.empty:
+		        # 4. Crear el gráfico con los datos filtrados
+		        fig1 = px.line(
+		            datos_filtrados, 
+		            x="Capacity1(mAh/cm2)", 
+		            y="Voltage(V)", 
+		            color="Paso",           # Esto asigna un color diferente a cada paso
+		            line_group="Tipo Paso", 
+		            title="Capacidad Específica por Paso (Filtrado)",
+		            # Opcional: puedes elegir una paleta específica como px.colors.qualitative.Plotly
+		            color_discrete_sequence=px.colors.qualitative.Safe 
+		        )
+		
+		        fig1.update_traces(line=dict(width=3))
+		        
+		        # 5. Mostrar el gráfico
+		        st.plotly_chart(fig1, use_container_width=True)
+		    else:
+		        st.warning("Selecciona al menos un paso para visualizar el gráfico.")
+
+
 
 
 
