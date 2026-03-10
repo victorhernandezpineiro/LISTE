@@ -178,7 +178,7 @@ def comparar():
             title=f"Voltaje vs Capacidad - Ciclo {ciclo_seleccionado}"
         )
         
-        fig1.update_traces(line=dict(width=6))
+        fig1.update_traces(line=dict(width=3))
         
         fig1.update_layout(
             legend_title="Archivo",
