@@ -122,25 +122,42 @@ def comparar():
             " - Ciclo " +
             datos_capacidad["Paso"].astype(str)
         )
-        with st.form('addition'):
-            valor1 = st.number_input('Valor mínimo eje Y')
-            valor2 = st.number_input('Valor máximo eje Y')
-            submit = st.form_submit_button('Aplicar')
+
+        # Calcular valores automáticos del eje Y
+        y_min_auto = float(datos_capacidad["Voltage(V)"].min())
+        y_max_auto = float(datos_capacidad["Voltage(V)"].max())
+
+        # Mostrar inputs con los valores automáticos ya escritos
+        valor1 = st.number_input(
+            "Valor mínimo eje Y",
+            value=y_min_auto,
+            format="%.2f"
+        )
+
+        valor2 = st.number_input(
+            "Valor máximo eje Y",
+            value=y_max_auto,
+            format="%.2f"
+        )
+
         fig1 = px.line(
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
             y="Voltage(V)",
-            color="Archivo_Ciclo",     # mismo color para carga+descarga del ciclo
-            line_group="Tipo Paso",         # evita que carga y descarga se conecten
+            color="Archivo_Ciclo",
+            line_group="Tipo Paso",
             title="Voltaje vs Capacidad - Comparación por ciclo"
         )
+
         fig1.update_traces(line=dict(width=3))
+
         fig1.update_layout(
             legend_title="Archivo - Ciclo",
         )
-        
-        fig1.update_yaxis(range=(valor1,valor2))
-        
+
+        # Aplicar rango seleccionado
+        fig1.update_yaxes(range=(valor1, valor2))
+
         st.plotly_chart(fig1, use_container_width=True)
 
         #----------------------------------
