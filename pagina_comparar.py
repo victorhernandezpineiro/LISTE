@@ -122,7 +122,10 @@ def comparar():
             " - Ciclo " +
             datos_capacidad["Paso"].astype(str)
         )
-        
+        with st.form('addition'):
+            valor1 = st.number_input('Valor mínimo eje Y')
+            valor2 = st.number_input('Valor máximo eje Y')
+            submit = st.form_submit_button('Aplicar')
         fig1 = px.line(
             datos_capacidad,
             x="Capacity1(mAh/cm2)",
@@ -135,6 +138,8 @@ def comparar():
         fig1.update_layout(
             legend_title="Archivo - Ciclo",
         )
+        
+        fig1.update_yaxis(range=(valor1,valor2))
         
         st.plotly_chart(fig1, use_container_width=True)
 
