@@ -135,22 +135,26 @@ def ratio():
     # 🔥 SUPERPOSICIÓN FINAL (RATIO)
     # -----------------------
     if img_file is not None and csv_c is not None and csv_o is not None:
-    
+
         st.subheader("Superposición final (Ratio)")
     
         fig3, ax3 = plt.subplots()
     
+        # Imagen base
         ax3.imshow(img_final, cmap='gray')
     
-        ax3.imshow(
+        # Mapa de ratio
+        im = ax3.imshow(
             ratio.values,
             cmap='jet',
             alpha=0.4,
             extent=[0, img_final.shape[1], img_final.shape[0], 0]
         )
-        cbar = fig3.colorbar(im, ax=ax3, fraction=0.046, pad=0.04)
-        cbar.set_label("Ratio C / O")
     
         ax3.axis("off")
+    
+        # 🔥 COLORBAR
+        cbar = fig3.colorbar(im, ax=ax3, fraction=0.046, pad=0.04)
+        cbar.set_label("Ratio C / O")
     
         st.pyplot(fig3)
