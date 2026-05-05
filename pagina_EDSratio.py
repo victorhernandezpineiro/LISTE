@@ -120,6 +120,8 @@ def ratio():
     
         archivo_C = pd.read_csv(csv_c, header=None)
         archivo_O = pd.read_csv(csv_o, header=None)
+
+        ratio=archivo_O/archivo_C
     
         st.subheader("Mapa C")
         fig1, ax1 = plt.subplots()
