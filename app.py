@@ -2,7 +2,7 @@ import streamlit as st
 import paginas as p
 import pagina_comparar as p_cp
 import pagina_home as p_home
-import pagina_EDSratio as edsratio
+import pagina_EDSratio as p_edsratio
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234", "role": "Estudiante de doctorado"}#,
