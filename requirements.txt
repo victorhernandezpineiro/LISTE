@@ -2,5 +2,5 @@ streamlit
 pandas
 plotly
 numpy
-opencv-python
+opencv-python-headless
 matplotlib
