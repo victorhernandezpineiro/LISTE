@@ -1,0 +1,49 @@
+import streamlit as st
+import cv2
+import numpy as np
+
+st.title("Recorte automático de imagen (SEM/EDS)")
+
+# Subir imagen
+uploaded_file = st.file_uploader("Sube una imagen", type=["png", "jpg", "jpeg"])
+
+if uploaded_file is not None:
+    # Leer imagen
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, 1)
+
+    st.subheader("Imagen original")
+    st.image(img, channels="BGR")
+
+    # Convertir a escala de grises
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Umbral
+    _, thresh = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
+
+    # Contornos
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    if contours:
+        # Contorno más grande
+        largest_contour = max(contours, key=cv2.contourArea)
+
+        # Bounding box
+        x, y, w, h = cv2.boundingRect(largest_contour)
+
+        # Recorte
+        cropped = img[y:y+h, x:x+w]
+
+        st.subheader("Imagen recortada")
+        st.image(cropped, channels="BGR")
+
+        # Descargar resultado
+        _, buffer = cv2.imencode(".png", cropped)
+        st.download_button(
+            label="Descargar recorte",
+            data=buffer.tobytes(),
+            file_name="recorte.png",
+            mime="image/png"
+        )
+    else:
+        st.warning("No se encontraron contornos.")
