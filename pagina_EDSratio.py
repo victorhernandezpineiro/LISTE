@@ -148,6 +148,7 @@ def ratio():
             alpha=0.4,
             extent=[0, img_final.shape[1], img_final.shape[0], 0]
         )
+        ax3.colorbar()
     
         ax3.axis("off")
     
