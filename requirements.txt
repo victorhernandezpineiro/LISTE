@@ -2,3 +2,5 @@ streamlit
 pandas
 plotly
 numpy
+cv2
+matplotlib
