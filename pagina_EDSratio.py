@@ -56,97 +56,97 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 from PIL import Image
-
-st.title("Visualización de mapas + imagen")
-
-# -----------------------
-# 📂 SUBIDA DE ARCHIVOS
-# -----------------------
-img_file = st.file_uploader("Sube la imagen", type=["png", "jpg", "jpeg"])
-csv_c = st.file_uploader("Sube CSV C", type=["csv"])
-csv_o = st.file_uploader("Sube CSV O", type=["csv"])
-
-# -----------------------
-# 🧠 FUNCIÓN RECORTE
-# -----------------------
-def crop_main_rect(image_np):
-    gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    if len(contours) == 0:
-        return image_np
-
-    largest = max(contours, key=cv2.contourArea)
-    x, y, w, h = cv2.boundingRect(largest)
-    cropped = image_np[y:y+h, x:x+w]
-    return cropped
-
-# -----------------------
-# 🖼️ PROCESAR IMAGEN
-# -----------------------
-if img_file is not None:
-
-    image = Image.open(img_file)
-    img_np = np.array(image)
-
-    st.subheader("Imagen original")
-    st.image(img_np)
-
-    use_crop = st.checkbox("¿Quieres recortar automáticamente la imagen?")
-
-    if use_crop:
-        cropped = crop_main_rect(img_np)
-
-        st.subheader("Vista antes del recorte (original)")
-        st.image(img_np)
-
-        st.subheader("Vista después del recorte")
-        st.image(cropped)
-
-        confirm = st.radio("¿Usar imagen recortada?", ["No", "Sí"])
-
-        if confirm == "Sí":
-            img_final = cropped
-        else:
-            img_final = img_np
-    else:
-        img_final = img_np
-
-# -----------------------
-# 📊 CARGA CSV
-# -----------------------
-if csv_c is not None and csv_o is not None:
-
-    archivo_C = pd.read_csv(csv_c, header=None)
-    archivo_O = pd.read_csv(csv_o, header=None)
-
-    st.subheader("Mapa C")
-    fig1, ax1 = plt.subplots()
-    ax1.imshow(archivo_C.values, cmap="jet")
-    st.pyplot(fig1)
-
-    st.subheader("Mapa O")
-    fig2, ax2 = plt.subplots()
-    ax2.imshow(archivo_O.values, cmap="jet")
-    st.pyplot(fig2)
-
+def ratio():
+    st.title("Visualización de mapas + imagen")
+    
     # -----------------------
-    # 🔥 SUPERPOSICIÓN FINAL
+    # 📂 SUBIDA DE ARCHIVOS
+    # -----------------------
+    img_file = st.file_uploader("Sube la imagen", type=["png", "jpg", "jpeg"])
+    csv_c = st.file_uploader("Sube CSV C", type=["csv"])
+    csv_o = st.file_uploader("Sube CSV O", type=["csv"])
+    
+    # -----------------------
+    # 🧠 FUNCIÓN RECORTE
+    # -----------------------
+    def crop_main_rect(image_np):
+        gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+        if len(contours) == 0:
+            return image_np
+    
+        largest = max(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest)
+        cropped = image_np[y:y+h, x:x+w]
+        return cropped
+    
+    # -----------------------
+    # 🖼️ PROCESAR IMAGEN
     # -----------------------
     if img_file is not None:
-
-        st.subheader("Superposición final")
-
-        fig3, ax3 = plt.subplots()
-
-        ax3.imshow(img_final, cmap="gray")
-
-        ax3.imshow(
-            archivo_C.values,
-            cmap="jet",
-            alpha=0.4,
-            extent=[0, img_final.shape[1], img_final.shape[0], 0]
-        )
-
-        st.pyplot(fig3)
+    
+        image = Image.open(img_file)
+        img_np = np.array(image)
+    
+        st.subheader("Imagen original")
+        st.image(img_np)
+    
+        use_crop = st.checkbox("¿Quieres recortar automáticamente la imagen?")
+    
+        if use_crop:
+            cropped = crop_main_rect(img_np)
+    
+            st.subheader("Vista antes del recorte (original)")
+            st.image(img_np)
+    
+            st.subheader("Vista después del recorte")
+            st.image(cropped)
+    
+            confirm = st.radio("¿Usar imagen recortada?", ["No", "Sí"])
+    
+            if confirm == "Sí":
+                img_final = cropped
+            else:
+                img_final = img_np
+        else:
+            img_final = img_np
+    
+    # -----------------------
+    # 📊 CARGA CSV
+    # -----------------------
+    if csv_c is not None and csv_o is not None:
+    
+        archivo_C = pd.read_csv(csv_c, header=None)
+        archivo_O = pd.read_csv(csv_o, header=None)
+    
+        st.subheader("Mapa C")
+        fig1, ax1 = plt.subplots()
+        ax1.imshow(archivo_C.values, cmap="jet")
+        st.pyplot(fig1)
+    
+        st.subheader("Mapa O")
+        fig2, ax2 = plt.subplots()
+        ax2.imshow(archivo_O.values, cmap="jet")
+        st.pyplot(fig2)
+    
+        # -----------------------
+        # 🔥 SUPERPOSICIÓN FINAL
+        # -----------------------
+        if img_file is not None:
+    
+            st.subheader("Superposición final")
+    
+            fig3, ax3 = plt.subplots()
+    
+            ax3.imshow(img_final, cmap="gray")
+    
+            ax3.imshow(
+                archivo_C.values,
+                cmap="jet",
+                alpha=0.4,
+                extent=[0, img_final.shape[1], img_final.shape[0], 0]
+            )
+    
+            st.pyplot(fig3)
