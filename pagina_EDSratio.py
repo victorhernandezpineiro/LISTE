@@ -148,7 +148,8 @@ def ratio():
             alpha=0.4,
             extent=[0, img_final.shape[1], img_final.shape[0], 0]
         )
-        ax3.colorbar()
+        cbar = fig3.colorbar(im, ax=ax3, fraction=0.046, pad=0.04)
+        cbar.set_label("Ratio C / O")
     
         ax3.axis("off")
     
