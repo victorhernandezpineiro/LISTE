@@ -70,7 +70,7 @@ if st.session_state["authenticated"]:
     elif st.session_state["pagina"] == "comparar":
         p_cp.comparar()
     elif st.session_state["pagina"] == "edsratio":
-        p_edsratio
+        p_edsratio.ratio()
 
 
 
