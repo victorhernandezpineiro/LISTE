@@ -57,6 +57,7 @@ import numpy as np
 import cv2
 from PIL import Image
 def ratio():
+   
     st.title("Visualización de mapas + imagen")
     
     # -----------------------
@@ -79,8 +80,28 @@ def ratio():
     
         largest = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(largest)
-        cropped = image_np[y:y+h, x:x+w]
-        return cropped
+        return image_np[y:y+h, x:x+w]
+    
+    # -----------------------
+    # 📊 CARGA CSV
+    # -----------------------
+    if csv_c is not None and csv_o is not None:
+    
+        archivo_C = pd.read_csv(csv_c, header=None)
+        archivo_O = pd.read_csv(csv_o, header=None)
+    
+        # 🔥 RATIO (NO TOCADO EN CONCEPTO, SOLO FORMALIZADO)
+        ratio = archivo_C / (archivo_O + 1e-9)  # evita división por cero
+    
+        st.subheader("Mapa C")
+        fig1, ax1 = plt.subplots()
+        ax1.imshow(archivo_C.values, cmap="jet")
+        st.pyplot(fig1)
+    
+        st.subheader("Mapa O")
+        fig2, ax2 = plt.subplots()
+        ax2.imshow(archivo_O.values, cmap="jet")
+        st.pyplot(fig2)
     
     # -----------------------
     # 🖼️ PROCESAR IMAGEN
@@ -98,57 +119,36 @@ def ratio():
         if use_crop:
             cropped = crop_main_rect(img_np)
     
-            st.subheader("Vista antes del recorte (original)")
+            st.subheader("Antes del recorte")
             st.image(img_np)
     
-            st.subheader("Vista después del recorte")
+            st.subheader("Después del recorte")
             st.image(cropped)
     
             confirm = st.radio("¿Usar imagen recortada?", ["No", "Sí"])
     
-            if confirm == "Sí":
-                img_final = cropped
-            else:
-                img_final = img_np
+            img_final = cropped if confirm == "Sí" else img_np
         else:
             img_final = img_np
     
     # -----------------------
-    # 📊 CARGA CSV
+    # 🔥 SUPERPOSICIÓN FINAL (RATIO)
     # -----------------------
-    if csv_c is not None and csv_o is not None:
+    if img_file is not None and csv_c is not None and csv_o is not None:
     
-        archivo_C = pd.read_csv(csv_c, header=None)
-        archivo_O = pd.read_csv(csv_o, header=None)
-
-        ratio=archivo_O/archivo_C
+        st.subheader("Superposición final (Ratio)")
     
-        st.subheader("Mapa C")
-        fig1, ax1 = plt.subplots()
-        ax1.imshow(archivo_C.values, cmap="jet")
-        st.pyplot(fig1)
+        fig3, ax3 = plt.subplots()
     
-        st.subheader("Mapa O")
-        fig2, ax2 = plt.subplots()
-        ax2.imshow(archivo_O.values, cmap="jet")
-        st.pyplot(fig2)
+        ax3.imshow(img_final, cmap='gray')
     
-        # -----------------------
-        # 🔥 SUPERPOSICIÓN FINAL
-        # -----------------------
-        if img_file is not None:
+        ax3.imshow(
+            ratio.values,
+            cmap='jet',
+            alpha=0.4,
+            extent=[0, img_final.shape[1], img_final.shape[0], 0]
+        )
     
-            st.subheader("Superposición final")
+        ax3.axis("off")
     
-            fig3, ax3 = plt.subplots()
-    
-            ax3.imshow(img_final, cmap="gray")
-    
-            ax3.imshow(
-                ratio.values,
-                cmap="jet",
-                alpha=0.4,
-                extent=[0, img_final.shape[1], img_final.shape[0], 0]
-            )
-    
-            st.pyplot(fig3)
+        st.pyplot(fig3)
