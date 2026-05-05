@@ -91,7 +91,7 @@ def ratio():
         archivo_O = pd.read_csv(csv_o, header=None)
     
         # 🔥 RATIO (NO TOCADO EN CONCEPTO, SOLO FORMALIZADO)
-        ratio = archivo_O / (archivo_C)  # evita división por cero
+        ratio = (archivo_O+1E-10) / (archivo_C+1E-10)  # evita división por cero
     
         st.subheader("Mapa C")
         fig1, ax1 = plt.subplots()
@@ -143,7 +143,7 @@ def ratio():
         ax3.imshow(img_final, cmap='gray')
     
         ax3.imshow(
-            ratio.values,
+            archivo_O.values,
             cmap='jet',
             alpha=0.4,
             extent=[0, img_final.shape[1], img_final.shape[0], 0]
