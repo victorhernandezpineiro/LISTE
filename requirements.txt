@@ -2,5 +2,5 @@ streamlit
 pandas
 plotly
 numpy
-cv2
+cv2 - python
 matplotlib
