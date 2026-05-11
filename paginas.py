@@ -1,3 +1,4 @@
+'''
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -112,9 +113,445 @@ def archivos():
 		        st.plotly_chart(fig1, use_container_width=True)
 		    else:
 		        st.warning("Selecciona al menos un paso para visualizar el gráfico.")
+'''
+import streamlit as st
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import io
 
 
+# =========================================================
+# PROCESAMIENTO DE DATOS
+# =========================================================
+@st.cache_data
+def procesar_datos(archivos):
 
+    dfs = []
+
+    for archivo in archivos:
+
+        try:
+            # =========================================
+            # Lectura segura
+            # =========================================
+            contenido = archivo.getvalue()
+
+            df = pd.read_csv(
+                io.BytesIO(contenido),
+                encoding="latin1"
+            )
+
+            # Limpiar nombres de columnas
+            df.columns = df.columns.str.strip()
+
+            # Nombre archivo
+            df["Archivo"] = archivo.name
+
+            # =========================================
+            # Cálculo capacidad superficial
+            # =========================================
+            if "Capacity(mAh)" in df.columns:
+
+                area = np.pi * 0.4**2
+
+                df["Capacity1(mAh/cm2)"] = (
+                    df["Capacity(mAh)"] / area
+                )
+
+            # =========================================
+            # Buscar columna de corriente
+            # =========================================
+            posibles_corrientes = [
+                "Current(mA)",
+                "Current(µA)",
+                "Current(μA)",
+                "Current(uA)"
+            ]
+
+            col_corriente = next(
+                (
+                    c for c in posibles_corrientes
+                    if c in df.columns
+                ),
+                None
+            )
+
+            # =========================================
+            # Crear columnas por defecto
+            # =========================================
+            df["Paso"] = 0
+            df["Tipo Paso"] = "Rest"
+
+            # =========================================
+            # Detectar ciclos
+            # =========================================
+            if col_corriente is not None:
+
+                corriente = pd.to_numeric(
+                    df[col_corriente],
+                    errors="coerce"
+                ).fillna(0)
+
+                # Estado base
+                condiciones = [
+                    corriente == 0,
+                    corriente > 0,
+                    corriente < 0
+                ]
+
+                nombres = [
+                    "Rest",
+                    "Carga",
+                    "Descarga"
+                ]
+
+                df["_base"] = np.select(
+                    condiciones,
+                    nombres,
+                    default="Rest"
+                )
+
+                # Detectar inicio REAL
+                inicio_carga = (
+                    (df["_base"] == "Carga") &
+                    (df["_base"].shift() != "Carga")
+                )
+
+                inicio_descarga = (
+                    (df["_base"] == "Descarga") &
+                    (df["_base"].shift() != "Descarga")
+                )
+
+                # Contadores
+                df["_carga_idx"] = inicio_carga.cumsum()
+                df["_descarga_idx"] = inicio_descarga.cumsum()
+
+                # Tipo paso
+                df["Tipo Paso"] = np.select(
+                    [
+                        df["_base"] == "Carga",
+                        df["_base"] == "Descarga"
+                    ],
+                    [
+                        "Carga " + df["_carga_idx"].astype(str),
+                        "Descarga " + df["_descarga_idx"].astype(str)
+                    ],
+                    default="Rest"
+                )
+
+                # Paso numérico
+                df["Paso"] = np.select(
+                    [
+                        df["_base"] == "Carga",
+                        df["_base"] == "Descarga"
+                    ],
+                    [
+                        df["_carga_idx"],
+                        df["_descarga_idx"]
+                    ],
+                    default=0
+                ).astype(int)
+
+                # Limpiar temporales
+                df.drop(
+                    columns=[
+                        "_base",
+                        "_carga_idx",
+                        "_descarga_idx"
+                    ],
+                    inplace=True
+                )
+
+            dfs.append(df)
+
+        except Exception as e:
+
+            st.error(
+                f"Error procesando {archivo.name}: {e}"
+            )
+
+    # =========================================
+    # Validación final
+    # =========================================
+    if not dfs:
+        return pd.DataFrame()
+
+    return pd.concat(
+        dfs,
+        ignore_index=True
+    )
+
+
+# =========================================================
+# INTERFAZ PRINCIPAL
+# =========================================================
+def comparar():
+
+    st.title("📂 Comparar Capacidades")
+
+    archivos = st.file_uploader(
+        "Sube uno o varios archivos CSV:",
+        type=["csv"],
+        accept_multiple_files=True
+    )
+
+    if not archivos:
+
+        st.info(
+            "⬆️ Sube uno o varios archivos CSV para comenzar."
+        )
+
+        return
+
+    # =====================================================
+    # Procesar datos
+    # =====================================================
+    datos = procesar_datos(archivos)
+
+    if datos.empty:
+
+        st.error("No se pudieron procesar archivos")
+
+        return
+
+    st.success(
+        f"✅ {len(archivos)} archivos cargados correctamente."
+    )
+
+    # =====================================================
+    # Validaciones
+    # =====================================================
+    columnas_requeridas = [
+        "Archivo",
+        "Paso",
+        "Tipo Paso"
+    ]
+
+    faltantes = [
+        c for c in columnas_requeridas
+        if c not in datos.columns
+    ]
+
+    if faltantes:
+
+        st.error(
+            f"Faltan columnas: {faltantes}"
+        )
+
+        st.write(datos.columns.tolist())
+
+        return
+
+    archivos_disponibles = (
+        datos["Archivo"]
+        .dropna()
+        .unique()
+        .tolist()
+    )
+
+    # =====================================================
+    # GRAFICA GENERAL
+    # =====================================================
+    st.subheader("📈 Gráfica general")
+
+    columnas_excluidas = [
+        "Archivo"
+    ]
+
+    columnas = [
+        c for c in datos.columns
+        if c not in columnas_excluidas
+    ]
+
+    if len(columnas) < 2:
+
+        st.warning(
+            "No hay suficientes columnas para graficar."
+        )
+
+        return
+
+    x_col = st.selectbox(
+        "📊 Eje X:",
+        columnas,
+        index=0
+    )
+
+    y_cols = st.multiselect(
+        "📉 Eje(s) Y:",
+        [c for c in columnas if c != x_col],
+        default=[
+            c for c in ["Voltage(V)"]
+            if c in columnas
+        ]
+    )
+
+    if y_cols:
+
+        fig = px.line(
+            datos,
+            x=x_col,
+            y=y_cols,
+            color="Archivo",
+            title="Comparativa general"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+    # =====================================================
+    # VOLTAJE VS CAPACIDAD
+    # =====================================================
+    if (
+        "Capacity1(mAh/cm2)" not in datos.columns
+        or
+        "Voltage(V)" not in datos.columns
+    ):
+
+        st.warning(
+            "No existen columnas necesarias para "
+            "Voltaje vs Capacidad."
+        )
+
+        return
+
+    st.subheader(
+        "⚡ Voltaje vs Capacidad (por ciclo)"
+    )
+
+    datos_capacidad = datos.copy()
+
+    # Eliminar Rest
+    datos_capacidad = datos_capacidad[
+        datos_capacidad["Paso"] > 0
+    ]
+
+    if datos_capacidad.empty:
+
+        st.warning(
+            "No se detectaron ciclos válidos."
+        )
+
+        return
+
+    # =========================================
+    # Crear identificador
+    # =========================================
+    datos_capacidad["Archivo_Ciclo"] = (
+        datos_capacidad["Archivo"].astype(str)
+        + " - Ciclo "
+        + datos_capacidad["Paso"].astype(str)
+    )
+
+    # =========================================
+    # Rangos automáticos
+    # =========================================
+    y_min_auto = float(
+        datos_capacidad["Voltage(V)"].min()
+    )
+
+    y_max_auto = float(
+        datos_capacidad["Voltage(V)"].max()
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        valor1 = st.number_input(
+            "Valor mínimo eje Y",
+            value=y_min_auto,
+            format="%.2f"
+        )
+
+    with col2:
+
+        valor2 = st.number_input(
+            "Valor máximo eje Y",
+            value=y_max_auto,
+            format="%.2f"
+        )
+
+    # =========================================
+    # Gráfica
+    # =========================================
+    fig1 = px.line(
+        datos_capacidad,
+        x="Capacity1(mAh/cm2)",
+        y="Voltage(V)",
+        color="Archivo_Ciclo",
+        line_group="Tipo Paso",
+        title="Voltaje vs Capacidad"
+    )
+
+    fig1.update_traces(
+        line=dict(width=3)
+    )
+
+    fig1.update_yaxes(
+        range=[valor1, valor2]
+    )
+
+    st.plotly_chart(
+        fig1,
+        use_container_width=True
+    )
+
+    # =====================================================
+    # CICLO ESPECÍFICO
+    # =====================================================
+    st.subheader(
+        "⚡ Voltaje vs Capacidad "
+        "(ciclo específico)"
+    )
+
+    ciclos = sorted(
+        datos_capacidad["Paso"]
+        .dropna()
+        .unique()
+    )
+
+    if len(ciclos) == 0:
+
+        st.warning(
+            "No hay ciclos disponibles."
+        )
+
+        return
+
+    ciclo_seleccionado = st.selectbox(
+        "Selecciona el ciclo:",
+        ciclos
+    )
+
+    datos_filtrados = datos_capacidad[
+        datos_capacidad["Paso"]
+        == ciclo_seleccionado
+    ].copy()
+
+    fig2 = px.line(
+        datos_filtrados,
+        x="Capacity1(mAh/cm2)",
+        y="Voltage(V)",
+        color="Archivo",
+        line_group="Tipo Paso",
+        title=(
+            f"Voltaje vs Capacidad "
+            f"- Ciclo {ciclo_seleccionado}"
+        )
+    )
+
+    fig2.update_traces(
+        line=dict(width=3)
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
 
 
 
