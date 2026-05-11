@@ -68,7 +68,6 @@ def archivos():
 			fig = px.line(datos, x=x_col, y=y_cols, title="Gráfica General")
 			st.plotly_chart(fig, use_container_width=True)
 
-		st.title("Funciono")
 	
 		# Gráfica 2 (Capacidad específica)
 		# Nota: Cambié el nombre a "Capacity1..." para que coincida con tu cálculo de arriba
@@ -77,7 +76,6 @@ def archivos():
 						   color="Paso",line_group="Tipo Paso", title="Capacidad Específica por Paso")
 			fig1.update_traces(line=dict(width=3))
 			st.plotly_chart(fig1, use_container_width=True)
-		st.title("Funciono2")
 
 		#GRafica3
 		if "Capacity1(mAh/cm2)" in datos.columns:
