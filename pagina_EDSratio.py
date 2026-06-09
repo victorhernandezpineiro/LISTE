@@ -89,6 +89,10 @@ def ratio():
     
         archivo_C = pd.read_csv(csv_c, header=None)
         archivo_O = pd.read_csv(csv_o, header=None)
+
+        # Convertir cualquier string a número
+        archivo_C = archivo_C.apply(pd.to_numeric, errors="coerce").fillna(0).astype(int)
+        archivo_O = archivo_O.apply(pd.to_numeric, errors="coerce").fillna(0).astype(int)
     
         # 🔥 RATIO (NO TOCADO EN CONCEPTO, SOLO FORMALIZADO)
         ratio = (archivo_O+1) / (archivo_C+1)  # evita división por cero
