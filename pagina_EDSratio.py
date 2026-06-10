@@ -91,7 +91,7 @@ def ratio():
         archivo_O = pd.read_csv(csv_o, header=None)
     
         # 🔥 RATIO (NO TOCADO EN CONCEPTO, SOLO FORMALIZADO)
-        ratio = (archivo_O+1) / (archivo_C+1)  # evita división por cero
+        ratio = (archivo_O) / (archivo_C)  # evita división por cero
     
         st.subheader("Mapa C")
         fig1, ax1 = plt.subplots()
@@ -155,6 +155,6 @@ def ratio():
     
         # 🔥 COLORBAR
         cbar = fig3.colorbar(im, ax=ax3, fraction=0.046, pad=0.04)
-        cbar.set_label("Ratio C / O")
+        cbar.set_label("Ratio O / C")
     
         st.pyplot(fig3)
