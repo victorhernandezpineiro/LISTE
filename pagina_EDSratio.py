@@ -92,6 +92,7 @@ def ratio():
     
         # 🔥 RATIO (NO TOCADO EN CONCEPTO, SOLO FORMALIZADO)
         ratio = (archivo_O) / (archivo_C)  # evita división por cero
+        ratio = np.nan_to_num(ratio, nan=0.0, posinf=0.0, neginf=0.0)
     
         st.subheader("Mapa C")
         fig1, ax1 = plt.subplots()
