@@ -3,6 +3,7 @@ import paginas as p
 import pagina_comparar as p_cp
 import pagina_home as p_home
 import pagina_EDSratio as p_edsratio
+import edsplothdf5 as p_hdf5
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234", "role": "Estudiante de doctorado"}#,
@@ -74,7 +75,7 @@ if st.session_state["authenticated"]:
     elif st.session_state["pagina"] == "edsratio":
         p_edsratio.ratio()
     elif st.session_state["pagina"] == "edshdf5":
-        p_edsratio.ratio()
+        p_hdf5.ratiohdf5()
 
 
 
