@@ -54,6 +54,8 @@ if st.session_state["authenticated"]:
             st.session_state["pagina"] = "comparar"
         if st.button("📂 EDS RATIO"):
             st.session_state["pagina"] = "edsratio"
+        if st.button("📂 EDS HDF5"):
+            st.session_state["pagina"] = "edshdf5"
         if st.button("🔓 Logout"):
             st.session_state["authenticated"] = False
             st.rerun()
@@ -71,6 +73,9 @@ if st.session_state["authenticated"]:
         p_cp.comparar()
     elif st.session_state["pagina"] == "edsratio":
         p_edsratio.ratio()
+    elif st.session_state["pagina"] == "edshdf5":
+        p_edsratio.ratio()
+
 
 
 
