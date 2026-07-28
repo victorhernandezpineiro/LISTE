@@ -4,6 +4,6 @@ plotly
 numpy
 opencv-python-headless
 matplotlib
-matplotlib.pyplot
-math
-h5py
+#matplotlib.pyplot
+#math
+#h5py
