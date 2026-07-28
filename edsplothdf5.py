@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+'''
 def ratiohdf5():
 
     st.title("Visualizador de mapas EDS")
@@ -252,3 +253,4 @@ def ratiohdf5():
     st.pyplot(fig)
 
     plt.close(fig)
+'''
