@@ -5,5 +5,5 @@ numpy
 opencv-python-headless
 matplotlib
 matplotlib.pyplot
-math
+#math
 #h5py
