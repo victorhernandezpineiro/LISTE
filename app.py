@@ -75,7 +75,7 @@ if st.session_state["authenticated"]:
     elif st.session_state["pagina"] == "edsratio":
         p_edsratio.ratio()
     #elif st.session_state["pagina"] == "edshdf5":
-        p_hdf5.ratiohdf5()
+       # p_hdf5.ratiohdf5()
 
 
 
