@@ -3,6 +3,6 @@ pandas
 plotly
 numpy
 opencv-python-headless
+matplotlib
 
-matplotlib.pyplot
 
