@@ -2,6 +2,7 @@ streamlit
 pandas
 plotly
 numpy
-matplotlib
+opencv-python-headless
+
 matplotlib.pyplot
 
