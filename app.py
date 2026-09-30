@@ -4,6 +4,7 @@ import pagina_comparar as p_cp
 import pagina_home as p_home
 import pagina_EDSratio as p_edsratio
 import pagina_CV as p_CV
+
 # Diccionario de usuarios
 USERS = {
     "victor": {"name": "Victor H.P.", "password": "1234", "role": "Estudiante de doctorado"}#,
