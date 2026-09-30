@@ -180,7 +180,7 @@ def CV():
    
            if archivo.name.endswith(".csv"):
    
-               df = pd.read_csv(archivo)
+               df = pd.read_csv(archivo,encoding="latin1")
    
            else:
    
