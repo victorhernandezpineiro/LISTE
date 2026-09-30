@@ -1032,8 +1032,8 @@ def CV():
            # DIFERENCIA DE VOLTAJES
            # ----------------------------------------------------
    
-           diferencia_voltaje = (
-               voltaje_max - voltaje_min
+           potencial_redox = (
+               (voltaje_max + voltaje_min)/2
            )
    
            # ----------------------------------------------------
@@ -1052,7 +1052,7 @@ def CV():
    
                f"{x_col} en mínima": voltaje_min,
    
-               "ΔV": diferencia_voltaje
+               "ΔV": potencial_redox
    
            })
    
