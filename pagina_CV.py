@@ -400,8 +400,7 @@ def CV():
    st.set_page_config(
        page_title="Análisis de CV",
        page_icon="📈",
-       layout="wide",
-       initial_sidebar_state="expanded"
+       layout="wide"
    )
    
    st.title("📈 Análisis de ciclos de CV")
@@ -434,7 +433,7 @@ def CV():
        for i in range(1, len(df)):
    
            # --------------------------------------------
-           # Comprobar si estamos en Rest
+           # Comprobar Rest
            # --------------------------------------------
    
            if step_type_col in df.columns:
@@ -469,7 +468,6 @@ def CV():
    
            else:
    
-               # El cambio está dentro del ruido
                contador_creciente = 0
                contador_decreciente = 0
    
@@ -488,7 +486,7 @@ def CV():
                tendencia_actual = "decreciente"
    
            # --------------------------------------------
-           # Detectar cambio de ciclo
+           # Detectar nuevo ciclo
            # --------------------------------------------
    
            if (
@@ -536,26 +534,32 @@ def CV():
    
    
    # ============================================================
-   # MENÚ LATERAL
+   # CONFIGURACIÓN DE CLASIFICACIÓN
    # ============================================================
    
-   st.sidebar.header("⚙️ Configuración")
+   st.header("⚙️ Configuración de clasificación")
    
-   tolerancia = st.sidebar.number_input(
-       "Tolerancia de voltaje (V)",
-       min_value=0.0,
-       value=0.005,
-       step=0.001,
-       format="%.4f"
-   )
+   col1, col2 = st.columns(2)
    
-   puntos_necesarios = st.sidebar.number_input(
-       "Puntos necesarios para confirmar tendencia",
-       min_value=1,
-       max_value=20,
-       value=3,
-       step=1
-   )
+   with col1:
+   
+       tolerancia = st.number_input(
+           "Tolerancia de voltaje (V)",
+           min_value=0.0,
+           value=0.005,
+           step=0.001,
+           format="%.4f"
+       )
+   
+   with col2:
+   
+       puntos_necesarios = st.number_input(
+           "Puntos necesarios para confirmar tendencia",
+           min_value=1,
+           max_value=20,
+           value=3,
+           step=1
+       )
    
    
    # ============================================================
@@ -569,7 +573,7 @@ def CV():
        try:
    
            # --------------------------------------------
-           # CSV
+           # Leer CSV
            # --------------------------------------------
    
            if archivo.name.lower().endswith(".csv"):
@@ -580,7 +584,7 @@ def CV():
                )
    
            # --------------------------------------------
-           # Excel
+           # Leer Excel
            # --------------------------------------------
    
            else:
@@ -612,7 +616,6 @@ def CV():
                puntos_necesarios=puntos_necesarios
            )
    
-           # Guardar
            datasets[archivo.name] = df
    
        except Exception as e:
@@ -623,12 +626,14 @@ def CV():
    
    
    # ============================================================
-   # COMPROBAR QUE HAY DATOS
+   # COMPROBAR DATOS
    # ============================================================
    
    if not datasets:
    
-       st.error("No se ha podido cargar ningún archivo.")
+       st.error(
+           "No se ha podido cargar ningún archivo."
+       )
    
        st.stop()
    
@@ -655,7 +660,7 @@ def CV():
    
    
    # ============================================================
-   # ARCHIVO INDIVIDUAL
+   # SELECCIÓN DE ARCHIVOS
    # ============================================================
    
    if modo_visualizacion == "Archivo individual":
@@ -669,11 +674,6 @@ def CV():
            archivo_seleccionado
        ]
    
-   
-   # ============================================================
-   # VARIOS ARCHIVOS
-   # ============================================================
-   
    else:
    
        archivos_a_representar = st.multiselect(
@@ -684,7 +684,7 @@ def CV():
    
    
    # ============================================================
-   # COMPROBAR SELECCIÓN DE ARCHIVOS
+   # COMPROBAR SELECCIÓN
    # ============================================================
    
    if not archivos_a_representar:
@@ -697,7 +697,7 @@ def CV():
    
    
    # ============================================================
-   # INFORMACIÓN DE LOS ARCHIVOS
+   # INFORMACIÓN DEL DATASET
    # ============================================================
    
    if modo_visualizacion == "Archivo individual":
@@ -776,7 +776,7 @@ def CV():
    
    
    # ============================================================
-   # OBTENER COLUMNAS NUMÉRICAS
+   # COLUMNAS NUMÉRICAS
    # ============================================================
    
    df_referencia = datasets[
@@ -791,18 +791,17 @@ def CV():
    )
    
    
-   # No mostrar Paso como opción
+   # No mostrar Paso como eje
    if "Paso" in columnas_numericas:
    
        columnas_numericas.remove("Paso")
    
    
    # ============================================================
-   # SELECCIÓN X / Y
+   # SELECCIÓN DE X / Y
    # ============================================================
    
    col1, col2 = st.columns(2)
-   
    
    with col1:
    
@@ -844,17 +843,9 @@ def CV():
    
        fig = go.Figure()
    
-       # --------------------------------------------
-       # Recorrer archivos
-       # --------------------------------------------
-   
        for archivo in archivos_a_representar:
    
            df_archivo = datasets[archivo]
-   
-           # ----------------------------------------
-           # Recorrer ciclos
-           # ----------------------------------------
    
            for ciclo in ciclos_seleccionados:
    
@@ -862,14 +853,12 @@ def CV():
                    df_archivo["Paso"] == ciclo
                ].copy()
    
-               # Si ese archivo no tiene ese ciclo
                if datos.empty:
-   
                    continue
    
-               # ------------------------------------
+               # ----------------------------------------
                # Nombre de la curva
-               # ------------------------------------
+               # ----------------------------------------
    
                if modo_visualizacion == "Archivo individual":
    
@@ -881,9 +870,9 @@ def CV():
                        f"{archivo} - Ciclo {ciclo}"
                    )
    
-               # ------------------------------------
+               # ----------------------------------------
                # Añadir curva
-               # ------------------------------------
+               # ----------------------------------------
    
                fig.add_trace(
                    go.Scatter(
@@ -894,15 +883,14 @@ def CV():
                    )
                )
    
+   
        # ========================================================
        # CONFIGURACIÓN DEL GRÁFICO
        # ========================================================
    
        fig.update_layout(
    
-           title=(
-               f"{y_col} vs {x_col}"
-           ),
+           title=f"{y_col} vs {x_col}",
    
            xaxis_title=x_col,
    
@@ -952,5 +940,3 @@ def CV():
                datasets[archivo_tabla],
                use_container_width=True
            )
-   
-      
