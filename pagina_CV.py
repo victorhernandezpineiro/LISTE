@@ -942,158 +942,158 @@ def CV():
            )
 
    # ============================================================
-# TABLA RESUMEN DE INTENSIDADES
-# ============================================================
-
-st.header("📋 Resumen de intensidades")
-
-if not ciclos_seleccionados:
-
-    st.warning(
-        "Selecciona al menos un ciclo para generar el resumen."
-    )
-
-else:
-
-    resultados = []
-
-    for archivo in archivos_a_representar:
-
-        df_archivo = datasets[archivo]
-
-        # ----------------------------------------------------
-        # Filtrar los ciclos seleccionados
-        # ----------------------------------------------------
-
-        datos = df_archivo[
-            df_archivo["Paso"].isin(ciclos_seleccionados)
-        ].copy()
-
-        if datos.empty:
-            continue
-
-        # ----------------------------------------------------
-        # Comprobar que existen las columnas X e Y
-        # ----------------------------------------------------
-
-        if x_col not in datos.columns or y_col not in datos.columns:
-
-            st.warning(
-                f"⚠️ {archivo}: no se encuentran las columnas "
-                f"seleccionadas ({x_col}, {y_col})."
-            )
-
-            continue
-
-        # ----------------------------------------------------
-        # Eliminar NaN
-        # ----------------------------------------------------
-
-        datos = datos.dropna(
-            subset=[x_col, y_col]
-        )
-
-        if datos.empty:
-            continue
-
-        # ----------------------------------------------------
-        # MÁXIMO DE INTENSIDAD
-        # ----------------------------------------------------
-
-        indice_max = datos[y_col].idxmax()
-
-        intensidad_max = datos.loc[
-            indice_max,
-            y_col
-        ]
-
-        voltaje_max = datos.loc[
-            indice_max,
-            x_col
-        ]
-
-        # ----------------------------------------------------
-        # MÍNIMO DE INTENSIDAD
-        # ----------------------------------------------------
-
-        indice_min = datos[y_col].idxmin()
-
-        intensidad_min = datos.loc[
-            indice_min,
-            y_col
-        ]
-
-        voltaje_min = datos.loc[
-            indice_min,
-            x_col
-        ]
-
-        # ----------------------------------------------------
-        # DIFERENCIA DE VOLTAJES
-        # ----------------------------------------------------
-
-        diferencia_voltaje = (
-            voltaje_max - voltaje_min
-        )
-
-        # ----------------------------------------------------
-        # GUARDAR RESULTADOS
-        # ----------------------------------------------------
-
-        resultados.append({
-
-            "Fichero": archivo,
-
-            f"{y_col} máxima": intensidad_max,
-
-            f"{x_col} en máxima": voltaje_max,
-
-            f"{y_col} mínima": intensidad_min,
-
-            f"{x_col} en mínima": voltaje_min,
-
-            "ΔV": diferencia_voltaje
-
-        })
-
-    # ========================================================
-    # CREAR TABLA
-    # ========================================================
-
-    if resultados:
-
-        df_resumen = pd.DataFrame(
-            resultados
-        )
-
-        # ----------------------------------------------------
-        # Redondear valores numéricos
-        # ----------------------------------------------------
-
-        columnas_numericas_resumen = (
-            df_resumen
-            .select_dtypes(include="number")
-            .columns
-        )
-
-        df_resumen[
-            columnas_numericas_resumen
-        ] = df_resumen[
-            columnas_numericas_resumen
-        ].round(6)
-
-        # ----------------------------------------------------
-        # Mostrar tabla
-        # ----------------------------------------------------
-
-        st.dataframe(
-            df_resumen,
-            use_container_width=True,
-            hide_index=True
-        )
-
-    else:
-
-        st.warning(
-            "No hay datos disponibles para generar el resumen."
-        )
+   # TABLA RESUMEN DE INTENSIDADES
+   # ============================================================
+   
+   st.header("📋 Resumen de intensidades")
+   
+   if not ciclos_seleccionados:
+   
+       st.warning(
+           "Selecciona al menos un ciclo para generar el resumen."
+       )
+   
+   else:
+   
+       resultados = []
+   
+       for archivo in archivos_a_representar:
+   
+           df_archivo = datasets[archivo]
+   
+           # ----------------------------------------------------
+           # Filtrar los ciclos seleccionados
+           # ----------------------------------------------------
+   
+           datos = df_archivo[
+               df_archivo["Paso"].isin(ciclos_seleccionados)
+           ].copy()
+   
+           if datos.empty:
+               continue
+   
+           # ----------------------------------------------------
+           # Comprobar que existen las columnas X e Y
+           # ----------------------------------------------------
+   
+           if x_col not in datos.columns or y_col not in datos.columns:
+   
+               st.warning(
+                   f"⚠️ {archivo}: no se encuentran las columnas "
+                   f"seleccionadas ({x_col}, {y_col})."
+               )
+   
+               continue
+   
+           # ----------------------------------------------------
+           # Eliminar NaN
+           # ----------------------------------------------------
+   
+           datos = datos.dropna(
+               subset=[x_col, y_col]
+           )
+   
+           if datos.empty:
+               continue
+   
+           # ----------------------------------------------------
+           # MÁXIMO DE INTENSIDAD
+           # ----------------------------------------------------
+   
+           indice_max = datos[y_col].idxmax()
+   
+           intensidad_max = datos.loc[
+               indice_max,
+               y_col
+           ]
+   
+           voltaje_max = datos.loc[
+               indice_max,
+               x_col
+           ]
+   
+           # ----------------------------------------------------
+           # MÍNIMO DE INTENSIDAD
+           # ----------------------------------------------------
+   
+           indice_min = datos[y_col].idxmin()
+   
+           intensidad_min = datos.loc[
+               indice_min,
+               y_col
+           ]
+   
+           voltaje_min = datos.loc[
+               indice_min,
+               x_col
+           ]
+   
+           # ----------------------------------------------------
+           # DIFERENCIA DE VOLTAJES
+           # ----------------------------------------------------
+   
+           diferencia_voltaje = (
+               voltaje_max - voltaje_min
+           )
+   
+           # ----------------------------------------------------
+           # GUARDAR RESULTADOS
+           # ----------------------------------------------------
+   
+           resultados.append({
+   
+               "Fichero": archivo,
+   
+               f"{y_col} máxima": intensidad_max,
+   
+               f"{x_col} en máxima": voltaje_max,
+   
+               f"{y_col} mínima": intensidad_min,
+   
+               f"{x_col} en mínima": voltaje_min,
+   
+               "ΔV": diferencia_voltaje
+   
+           })
+   
+       # ========================================================
+       # CREAR TABLA
+       # ========================================================
+   
+       if resultados:
+   
+           df_resumen = pd.DataFrame(
+               resultados
+           )
+   
+           # ----------------------------------------------------
+           # Redondear valores numéricos
+           # ----------------------------------------------------
+   
+           columnas_numericas_resumen = (
+               df_resumen
+               .select_dtypes(include="number")
+               .columns
+           )
+   
+           df_resumen[
+               columnas_numericas_resumen
+           ] = df_resumen[
+               columnas_numericas_resumen
+           ].round(6)
+   
+           # ----------------------------------------------------
+           # Mostrar tabla
+           # ----------------------------------------------------
+   
+           st.dataframe(
+               df_resumen,
+               use_container_width=True,
+               hide_index=True
+           )
+   
+       else:
+   
+           st.warning(
+               "No hay datos disponibles para generar el resumen."
+           )
