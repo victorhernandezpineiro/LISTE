@@ -14,7 +14,7 @@ def.CV():
     )
     
     st.title("📈 Análisis de ciclos de CV")
-    
+    '''
     
     # ============================================================
     # FUNCIÓN PARA CLASIFICAR LOS CICLOS
@@ -358,3 +358,4 @@ def.CV():
             df,
             use_container_width=True
         )
+    '''
