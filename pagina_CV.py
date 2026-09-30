@@ -940,3 +940,144 @@ def CV():
                datasets[archivo_tabla],
                use_container_width=True
            )
+
+   # ============================================================
+   # TABLA RESUMEN DE INTENSIDADES
+   # ============================================================
+   
+   st.header("📋 Resumen de intensidades")
+   
+   if not ciclos_seleccionados:
+   
+       st.warning(
+           "Selecciona al menos un ciclo para generar el resumen."
+       )
+   
+   else:
+   
+       resultados = []
+   
+       for archivo in archivos_a_representar:
+   
+           df_archivo = datasets[archivo]
+   
+           # --------------------------------------------
+           # Filtrar los ciclos seleccionados
+           # --------------------------------------------
+   
+           datos = df_archivo[
+               df_archivo["Paso"].isin(ciclos_seleccionados)
+           ].copy()
+   
+           if datos.empty:
+               continue
+   
+           # --------------------------------------------
+           # Eliminar valores NaN
+           # --------------------------------------------
+   
+           datos = datos.dropna(
+               subset=["Current(A)", "Voltage(V)"]
+           )
+   
+           if datos.empty:
+               continue
+   
+           # --------------------------------------------
+           # Índice de intensidad máxima
+           # --------------------------------------------
+   
+           indice_max = datos["Current(A)"].idxmax()
+   
+           intensidad_max = datos.loc[
+               indice_max,
+               "Current(A)"
+           ]
+   
+           voltaje_max = datos.loc[
+               indice_max,
+               "Voltage(V)"
+           ]
+   
+           # --------------------------------------------
+           # Índice de intensidad mínima
+           # --------------------------------------------
+   
+           indice_min = datos["Current(A)"].idxmin()
+   
+           intensidad_min = datos.loc[
+               indice_min,
+               "Current(A)"
+           ]
+   
+           voltaje_min = datos.loc[
+               indice_min,
+               "Voltage(V)"
+           ]
+   
+           # --------------------------------------------
+           # Diferencia de voltajes
+           # --------------------------------------------
+   
+           diferencia_voltaje = (
+               voltaje_max - voltaje_min
+           )
+   
+           # --------------------------------------------
+           # Guardar resultados
+           # --------------------------------------------
+   
+           resultados.append({
+   
+               "Fichero": archivo,
+   
+               "I máxima (A)": intensidad_max,
+   
+               "V en I máxima (V)": voltaje_max,
+   
+               "I mínima (A)": intensidad_min,
+   
+               "V en I mínima (V)": voltaje_min,
+   
+               "ΔV (V)": diferencia_voltaje
+   
+           })
+   
+   
+       # ========================================================
+       # CREAR TABLA
+       # ========================================================
+   
+       if resultados:
+   
+           df_resumen = pd.DataFrame(
+               resultados
+           )
+   
+           # Redondear valores
+           columnas_redondear = [
+               "I máxima (A)",
+               "V en I máxima (V)",
+               "I mínima (A)",
+               "V en I mínima (V)",
+               "ΔV (V)"
+           ]
+   
+           df_resumen[
+               columnas_redondear
+           ] = df_resumen[
+               columnas_redondear
+           ].round(6)
+   
+           st.dataframe(
+               df_resumen,
+               use_container_width=True,
+               hide_index=True
+           )
+   
+       else:
+   
+           st.warning(
+               "No hay datos disponibles para generar el resumen."
+           )
+
